@@ -2,6 +2,7 @@ import CONFIG from './config.es6';
 import './overrides.es6';
 import signalCurves from './signalCurves.es6';
 import conversions from '../mixins/conversions.es6';
+import math from '../mixins/math.es6';
 
 class AudioIO {
 
@@ -84,6 +85,7 @@ class AudioIO {
 
 AudioIO.mixinSingle( AudioIO.prototype, signalCurves, 'curves' );
 AudioIO.mixinSingle( AudioIO.prototype, conversions, 'convert' );
+AudioIO.mixinSingle( AudioIO.prototype, math, 'math' );
 
 
 

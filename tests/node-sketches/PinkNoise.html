@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="SpectrumAnalyser.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            canvas = document.querySelector( '#one' ),
+            ctx = canvas.getContext( '2d' ),
+            range = canvas.width,
+            limit = 5;
+
+        io.math.generatePinkNumber( range, limit );
+
+        for( var i = 0, step = canvas.width / range; i < range; ++i ) {
+            ctx.fillRect( i * step, io.math.getNextPinkNumber() * canvas.height, 1, 1 );
+        }
+
+
+        var spectrumAnalyser = new SpectrumAnalyser( '#two', io, canvas.width ),
+            scope = new Oscilloscope( '#three', io ),
+            bufferSource = io.context.createBufferSource(),
+            buffer = io.context.createBuffer( 2, io.context.sampleRate, io.context.sampleRate ),
+            channel,
+            output = io.context.createGain(),
+            osc = io.context.createOscillator();
+
+        for( var c = 0; c < 2; ++c ) {
+            channel = buffer.getChannelData( c );
+
+            for( var i = 0; i < io.context.sampleRate; i += 1 ) {
+                channel[ i ] = io.math.getNextPinkNumber() * 2 - 1;
+                channel[ i ] = io.math.getNextPinkNumber() * 2 - 1;
+            }
+        }
+
+        osc.frequency.value = 10;
+        osc.type = 'sawtooth';
+
+        bufferSource.buffer = buffer;
+        bufferSource.loop = true;
+        bufferSource.start();
+        output.gain.value = 0.1;
+
+        bufferSource.connect( output );
+        bufferSource.connect( spectrumAnalyser.analyser );
+        bufferSource.connect( scope.analyser );
+        output.connect( io.master );
+        osc.start();
+        spectrumAnalyser.start();
+        scope.start();
+
+    </script>
+</body>
+</html>

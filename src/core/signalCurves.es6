@@ -1,4 +1,5 @@
 import CONFIG from './config.es6';
+import math from '../mixins/Math.es6';
 
 
 let signalCurves = {};
@@ -245,5 +246,56 @@ Object.defineProperty( signalCurves, 'Floor', {
         return curve;
     }() )
 } );
+
+Object.defineProperty( signalCurves, 'GaussianWhiteNoise', {
+    writable: false,
+    enumerable: true,
+    value: ( function() {
+        let resolution = CONFIG.curveResolution * 2,
+            curve = new Float32Array( resolution );
+
+        for ( let i = 0, x; i < resolution; ++i ) {
+            curve[ i ] = math.nrand();
+        }
+
+        return curve;
+    }() )
+} );
+
+Object.defineProperty( signalCurves, 'WhiteNoise', {
+    writable: false,
+    enumerable: true,
+    value: ( function() {
+        let resolution = CONFIG.curveResolution * 2,
+            curve = new Float32Array( resolution );
+
+        for ( let i = 0, x; i < resolution; ++i ) {
+            curve[ i ] = Math.random();
+        }
+
+        return curve;
+    }() )
+} );
+
+Object.defineProperty( signalCurves, 'PinkNoise', {
+    writable: false,
+    enumerable: true,
+    value: ( function() {
+        let resolution = CONFIG.curveResolution * 2,
+            curve = new Float32Array( resolution );
+
+        math.generatePinkNumber();
+
+        for ( let i = 0, x; i < resolution; ++i ) {
+            curve[ i ] = math.getNextPinkNumber() * 2 - 1;
+        }
+
+        console.log( Math.min.apply( Math, curve ) );
+        console.log( Math.max.apply( Math, curve ) );
+
+        return curve;
+    }() )
+} );
+
 
 module.exports = signalCurves;
