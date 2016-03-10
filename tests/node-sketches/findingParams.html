@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            dryWetNode = io.createDryWetNode();
+
+        for( var i in dryWetNode ) {
+            if( dryWetNode[ i ] instanceof Param ) {
+                console.log( i );
+            }
+        }
+    </script>
+</body>
+</html>

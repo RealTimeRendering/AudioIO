@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+
+    <canvas></canvas>
+
+    <p>Cutoff: <span id="cutoffReadout"></span>hz</p>
+    <input id="cutoff" type="range" min="0" max="1" step="0.001"/>
+
+    <p>Resonance: <span id="resonanceReadout"></span></p>
+    <input id="resonance" type="range" min="0" max="4" step="0.001"/>
+
+    <script type="text/javascript">
+        var canvas = document.querySelector( 'canvas' ),
+            ctx = canvas.getContext( '2d' ),
+            cutoff = document.getElementById( 'cutoff' ),
+            resonance = document.getElementById( 'resonance' ),
+            cutoffReadout = document.getElementById( 'cutoffReadout' ),
+            resonanceReadout = document.getElementById( 'resonanceReadout' );
+
+        var io = new AudioIO();
+        var osc = io.context.createOscillator();
+        osc.type = 'sine';
+        // osc.frequency.value = 220;
+        // osc.start( 0 );
+
+        var sketch = io.createSketch();
+        osc.connect( sketch );
+        sketch.connect( io.master );
+
+        cutoff.addEventListener( 'input', function( e ) {
+            var value = +e.target.value;
+            cutoffReadout.textContent = value * (io.context.sampleRate / 2) | 0;
+            sketch.controls.cutoff.value = value;
+        }, false );
+
+        resonance.addEventListener( 'input', function( e ) {
+            var value = +e.target.value;
+            resonanceReadout.textContent = value;
+            sketch.controls.resonance.value = value;
+        }, false );
+
+        cutoffReadout.textContent = sketch.controls.cutoff.value * (io.context.sampleRate / 2) | 0;
+        resonanceReadout.textContent = sketch.controls.resonance.value;
+
+
+
+
+
+        // Really fucking awesome waveshaper:
+        //
+        // var amount = -0.9;
+        // var shaper = io.createWaveShaper( function( x ) {
+        //     var k = (2 * amount) / (1 - amount);
+        //     return ( 1 + k ) * x / ( 1 + k * Math.abs( x ) );
+        // }, 512 );
+
+        // var osc = io.context.createOscillator();
+        // osc.frequency.value = 44100 * 0.001;
+        // osc.type = 'triangle';
+        // osc.connect( shaper );
+        // shaper.connect( io.master );
+        // osc.start( 0 );
+
+        // io.context.oncomplete = function( e ) {
+        //     var buffer = e.renderedBuffer.getChannelData( 0 ),
+        //         width = canvas.width,
+        //         height = canvas.height,
+        //         xStep = width / buffer.length;
+
+        //     for ( var i = 0; i < buffer.length; i++ ) {
+        //         console.log( buffer[ i ] );
+
+        //         var y = (buffer[ i ] + 1) * 0.5;
+
+
+        //         ctx.fillRect( i * xStep, height - (y * height), 1, 1 );
+        //     }
+        // };
+
+        // io.context.startRendering();
+    </script>
+</body>
+</html>

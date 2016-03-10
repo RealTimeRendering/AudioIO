@@ -1,0 +1,58 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <input type="number" value="0" min="0" max="3" step="1" id="waveform" />
+    <input type="number" value="220" min="1" max="22000" step="1" id="freq" />
+    <input type="number" value="0" min="0" max="1" step="0.1" id="phase" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            bank = io.createOscillatorBank(),
+            selector = io.createConstant( 0 ),
+            frequency = io.createConstant( 220 ),
+            scope = new Oscilloscope( 'canvas', io ),
+            phase = io.createConstant( 0 ),
+            phaseOffset = io.createPhaseOffset();
+
+        output.gain.value = 0.01;
+
+        selector.connect( bank.controls.waveform );
+        frequency.connect( bank.controls.frequency );
+
+        frequency.connect( phaseOffset.controls.frequency )
+        phase.connect( phaseOffset.controls.phase );
+
+        bank.connect( phaseOffset );
+        phaseOffset.connect( scope.analyser );
+        phaseOffset.connect( output );
+        output.connect( io.master );
+
+        scope.start( 0 );
+
+        document.querySelector( '#waveform' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            selector.value = val;
+        } );
+
+        document.querySelector( '#freq' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            frequency.value = val;
+        } );
+
+
+        document.querySelector( '#freq' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            phase.value = val;
+        } );
+
+    </script>
+</body>
+</html>

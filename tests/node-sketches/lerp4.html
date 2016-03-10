@@ -1,0 +1,109 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <input type="number" value="0.97" min="0.9" max="1" step="0.001" id="value" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( '#one', io ),
+            scope2 = new Oscilloscope( '#two', io ),
+            scope3 = new Oscilloscope( '#three', io ),
+            osc = io.context.createOscillator(),
+            delay = io.context.createDelay(),
+            feedbackControl = io.createConstant( 0 ),
+            feedback = io.context.createGain(),
+            bufferSource = io.context.createBufferSource(),
+            bufferLoader = function( uri ) {
+                return new Promise( function( resolve, reject ) {
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open( 'GET', uri );
+
+                    xhr.responseType = 'arraybuffer';
+
+                    xhr.onload = function() {
+                        if( xhr.status === 200 ) {
+                            // Do the decode dance
+                            io.context.decodeAudioData(
+                                xhr.response,
+                                function(buffer) {
+                                    resolve( buffer );
+                                },
+                                function( e ) {
+                                    reject( e );
+                                }
+                            );
+                        }
+                        else {
+                            reject( Error( 'Status !== 200' ) );
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        reject( Error( 'Network error' ) );
+                    };
+                    xhr.send();
+                } );
+            },
+            greaterThan = io.createGreaterThan(),
+            switcher = io.createSwitch( 2, 0 ),
+            abs = io.createAbs();
+
+        output.gain.value = 0.1;
+        output.connect( io.master );
+
+        delay.connect( feedback );
+        feedback.connect( delay );
+        feedback.gain.value = 0;
+        delay.delayTime.value = 1 / (io.context.sampleRate);
+        feedbackControl.connect( feedback.gain );
+
+        var max = io.createMax();
+        delay.connect( max, 0, 0 );
+
+        max.connect( scope2.analyser );
+        max.connect( greaterThan );
+        max.connect( switcher.inputs[ 1 ] );
+        greaterThan.connect( switcher.control );
+        switcher.connect( scope3.analyser );
+
+
+
+        bufferLoader( 'tom-high.wav' ).then( function( buffer ) {
+
+            bufferSource.buffer = buffer;
+            bufferSource.loop = true;
+            bufferSource.connect( abs );
+            bufferSource.playbackRate.value = 1;
+            console.log( bufferSource );
+            abs.connect( max, 0, 1 );
+            abs.connect( delay );
+            abs.connect( greaterThan.controls.value );
+            abs.connect( switcher.inputs[ 0 ] );
+            bufferSource.connect( scope.analyser );
+            bufferSource.connect( output );
+            scope.start();
+            scope2.start();
+            scope3.start();
+            bufferSource.start( 0 );
+        }, function( err ) {
+            console.log( err );
+        } );
+
+        document.querySelector( '#value' ).addEventListener( 'input', function( e ) {
+            feedbackControl.value = +e.target.value;
+        }, false );
+
+    </script>
+</body>
+</html>

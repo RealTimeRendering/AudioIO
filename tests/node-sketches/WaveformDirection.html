@@ -1,0 +1,63 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <input type="number" value="0" min="0" max="220" step="0.1" id="value" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( '#one', io ),
+            scope2 = new Oscilloscope( '#two', io ),
+            osc = io.context.createOscillator(),
+            currentMinusPrev = io.createSubtract(),
+            currentAddOne = io.createAdd( 1 ),
+            prevAddOne = io.createAdd( 1 ),
+            current = io.createParam(),
+            prev = io.createParam(),
+            sign = io.createSign(),
+            prevSample = io.createSampleDelay( 256 ),
+            scale = io.createScale( -1, 1, -0.75, 0.75 ),
+            multiply = io.createMultiply( 10000 );
+
+
+        osc.connect( currentAddOne );
+        osc.connect( prevSample );
+        prevSample.connect( prevAddOne );
+        currentAddOne.connect( currentMinusPrev, 0, 0 );
+        prevAddOne.connect( currentMinusPrev, 0, 1 );
+        currentMinusPrev.connect( multiply );
+        multiply.connect( sign );
+        sign.connect( scale );
+
+        osc.frequency.value = 1;
+        osc.type = 'sine';
+        output.gain.value = 0.1;
+
+
+        osc.connect( scope.analyser );
+        scale.connect( scope2.analyser );
+
+
+        output.connect( io.master );
+        scope.start();
+        scope2.start();
+        osc.start();
+
+        document.querySelector( '#value' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            console.log( val );
+            osc.frequency.linearRampToValueAtTime( val, io.context.currentTime + 0.5 );
+        }, false );
+
+    </script>
+</body>
+</html>

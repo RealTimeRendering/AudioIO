@@ -1,0 +1,126 @@
+* {
+  -webkit-font-smoothing: subpixel-antialiased;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1rem;
+  line-height: 1.1rem;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  color: #333;
+  background-color: #ccc;
+}
+
+h2 {
+  margin: 0 0 0.75em 0;
+}
+
+main {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  border-radius: 3px;
+  border: 4px solid rgba(0, 0, 0, 0.2);
+  width: 70rem;
+  height: 42.5rem;
+  margin: auto;
+  background: #555;
+}
+
+section {
+  position: absolute;
+  padding: 1rem;
+  background: linear-gradient(to bottom, rgba(79, 79, 79, 0.8) 0%, rgba(41, 41, 41, 0.8) 100%);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+section h2 {
+  color: #222;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+section > .knob > .label {
+  color: #999;
+  text-shadow: 0 -1px 0px black;
+}
+section#oscillator1, section#oscillator2, section#oscilloscope {
+  height: 18.3rem;
+}
+section#oscillator1, section#oscillator2 {
+  width: 14.2rem;
+  background: linear-gradient(to bottom, rgba(150, 150, 150, 0.8) 0%, rgba(79, 79, 79, 0.8) 100%);
+}
+section#oscillator1 h2, section#oscillator2 h2 {
+  color: #333;
+}
+section#oscillator1 > .knob > .label, section#oscillator2 > .knob > .label {
+  color: #bbb;
+  text-shadow: 0 -1px 0px black;
+}
+section#oscillator1 {
+  top: 0;
+  left: 0;
+}
+section#oscillator2 {
+  top: 0;
+  right: 0;
+}
+section#oscillator2 h2 {
+  text-align: right;
+}
+section#oscilloscope {
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 40.8rem;
+  margin: auto;
+}
+section#oscilloscope canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.4em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+section#oscilloscope::before {
+  content: '';
+  position: absolute;
+  top: 0.6em;
+  left: 0.6em;
+  right: 0.6em;
+  bottom: 0.7em;
+  border-radius: 0.65em;
+  box-shadow: inset 0 3em 3em rgba(0, 0, 0, 0.2), inset 0 -3em 3em rgba(255, 255, 255, 0.11);
+}
+section#envelope, section#delay, section#master {
+  height: 11.4rem;
+}
+section#envelope {
+  bottom: 12rem;
+  left: 0;
+  width: 30rem;
+}
+section#delay {
+  bottom: 12rem;
+  right: 14.2rem;
+  width: 24.9rem;
+}
+section#master {
+  bottom: 12rem;
+  right: 0;
+  width: 14.3rem;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+/*# sourceMappingURL=main.css.map */

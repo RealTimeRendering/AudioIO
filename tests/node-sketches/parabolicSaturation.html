@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+		<canvas></canvas>
+		<input id="inputLevel" type="range" min="0" max="2" step="0.1" value="1" /><span id="inputLevelReadout"></span>
+		<input id="saturationLevel" type="range" min="0" max="5" step="0.01" value="1" /><span id="saturationLevelReadout"></span>
+
+		<script type="text/javascript">
+			function parabolicSaturation( input, level ) {
+				// level = Math.max( level, 2e-12 );
+
+				// var add = level + level,
+				//     divide = 0.25 / level,
+				//     negate = -add;
+
+				// input = Math.max( negate, Math.min( add, input ) );
+
+				// var abs = Math.abs( input );
+				// var multiply1 = abs * divide;
+				// var subtract = 1 - multiply1;
+				// var multiply2 = input * subtract;
+
+				// return multiply2;
+
+				level = Math.max( level, 2e-12 );
+				var doubleLevel = level + level;
+
+				input = Math.max( -doubleLevel, Math.min( doubleLevel, input ) );
+
+				return input * (1 - (Math.abs( input ) * ( 0.25 / level )))
+			}
+
+			var canvas = document.querySelector( 'canvas' ),
+				inputLevel = document.getElementById( 'inputLevel' ),
+				saturationLevel = document.getElementById( 'saturationLevel' ),
+				inputLevelReadout = document.getElementById( 'inputLevelReadout' ),
+				saturationLevelReadout = document.getElementById( 'saturationLevelReadout' ),
+				ctx = canvas.getContext( '2d' );
+
+			function updateInputLevel( e ) {
+				inputLevelReadout.textContent = e.target.value;
+				redraw();
+			}
+
+			function updateSaturationLevel( e ) {
+				saturationLevelReadout.textContent = e.target.value;
+				redraw();
+			}
+
+
+			function redraw() {
+				var input = +inputLevel.value,
+					saturation = +saturationLevel.value,
+					width = canvas.width,
+					height = canvas.height;
+				console.log( width, height );
+				ctx.clearRect( 0, 0, width, height );
+
+				for( var i = 0; i < width; ++i ) {
+					var value = (i / width) * input;
+					var saturated = parabolicSaturation( value, saturation );
+
+					ctx.fillStyle = 'rgba( 0, 0, 0, 1 )';
+					ctx.fillRect( i, Math.abs((1 - value) * height), 1, 1 );
+
+					ctx.fillStyle = 'rgba( 255, 0, 0, 1 )';
+					ctx.fillRect( i, Math.abs((1 - saturated) * height) , 1, 1 );
+				}
+			}
+
+			inputLevel.addEventListener( 'input', updateInputLevel );
+			saturationLevel.addEventListener( 'input', updateSaturationLevel );
+
+			redraw();
+		</script>
+	</body>
+</html>

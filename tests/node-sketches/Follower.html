@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <input type="number" value="0" min="0" max="220" step="0.1" id="up" />
+    <input type="number" value="0" min="0" max="220" step="0.1" id="down" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( '#one', io ),
+            osc = io.context.createOscillator(),
+            follower = io.createEnvelopeFollower(),
+            up = io.createConstant( 1 ),
+            down = io.createConstant( 1 ),
+            abs = io.createAbs();
+
+        osc.frequency.value = 220;
+        output.gain.value = 0.0;
+
+        up.connect( follower.controls.up );
+        down.connect( follower.controls.down );
+
+        osc.connect( abs );
+        abs.connect( follower );
+        follower.connect( scope.analyser );
+
+        osc.start();
+        scope.start();
+
+
+        follower.connect( output );
+        output.connect( io.master );
+
+
+        document.querySelector( '#up' ).addEventListener( 'input', function( e ) {
+            up.value = +e.target.value;
+        }, false );
+
+        document.querySelector( '#down' ).addEventListener( 'input', function( e ) {
+            down.value = +e.target.value;
+        }, false );
+
+    </script>
+</body>
+</html>

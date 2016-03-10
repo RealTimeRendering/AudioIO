@@ -1,0 +1,80 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+
+    <input type="number" value="0" min="0" max="3" step="1" id="waveform" />
+    <input type="number" value="1" min="0.0" max="1.0" step="0.01" id="delayTime" />
+    <input type="number" value="220" min="1" max="22000" step="1" id="freq" />
+
+    <input type="number" value="1" min="0" max="200" step="1" id="saturation" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( 'canvas', io ),
+            osc = io.createOscillatorBank(),
+            freq = io.createConstant( 220 ),
+            value = io.createConstant( 1 ),
+            phaseOffset = io.createPhaseOffset(),
+            selector = io.createConstant( 0 ),
+            saturation = io.createParabolicSaturation(),
+            saturationLevel = io.createConstant( 0 );
+
+
+        osc.connect( phaseOffset );
+        freq.connect( phaseOffset.controls.frequency );
+        freq.connect( osc.controls.frequency );
+        value.connect( phaseOffset.controls.phase );
+
+        selector.connect( osc.controls.waveform );
+        saturationLevel.connect( saturation.controls.value );
+
+
+        saturation.control.value = 1;
+
+        // osc.type = 'square';
+        // osc.frequency.value = 0;
+        output.gain.value = 0.1;
+
+        phaseOffset.connect( saturation );
+
+        saturation.connect( scope.analyser );
+        saturation.connect( output );
+        output.connect( io.master );
+        scope.start();
+
+        document.querySelector( '#waveform' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            console.log( val );
+            selector.value = val;
+        } );
+
+
+        document.querySelector( '#delayTime' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            // delay.delayTime.value = (1 / freq.value) * val;
+            value.value = val;
+        } );
+
+        document.querySelector( '#freq' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            // delay.delayTime.value = (220 / io.context.sampleRate) * val;
+            freq.value = val;
+        } );
+
+        document.querySelector( '#saturation' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            // delay.delayTime.value = (220 / io.context.sampleRate) * val;
+            saturationLevel.value = val;
+        } );
+
+    </script>
+</body>
+</html>

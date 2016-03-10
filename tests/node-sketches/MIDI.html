@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO();
+
+        io.midi.enable();
+
+        io.midi.on( 'note-on', function( event ) {
+        	console.log( event.customData );
+        } );
+
+        io.midi.on( 'note-off', function( event ) {
+        	console.log( event.customData );
+        } );
+
+        io.midi.on( 'pitchbend', function( event ) {
+        	console.log( 'pitchbend', event.customData );
+        } );
+    </script>
+</body>
+</html>

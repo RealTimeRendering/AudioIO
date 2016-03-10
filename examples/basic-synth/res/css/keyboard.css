@@ -1,0 +1,99 @@
+#keyboard {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 12rem;
+  background: linear-gradient(to bottom, #1e1e1e 0%, #0f0f0f 50%);
+}
+#keyboard .keys {
+  position: absolute;
+  top: 0.5em;
+  left: 0;
+  right: 0;
+  bottom: 1em;
+  width: 100%;
+  max-width: 45rem;
+  margin: 0 auto;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+#keyboard .keys > .key {
+  position: relative;
+  float: left;
+  z-index: 1;
+  -webkit-transform-origin: 50% 0%;
+  transform-origin: 50% 0%;
+  text-align: center;
+  display: inline-block;
+  height: 100%;
+  cursor: pointer;
+}
+#keyboard .keys > .key > span {
+  position: absolute;
+  bottom: 1.25em;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  display: inline-block;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#keyboard .keys > .key.white {
+  width: 12%;
+  margin: 0 0.25%;
+  background: linear-gradient(to bottom, white 0%, #fffadc 60%);
+  border-bottom-left-radius: 6%;
+  border-bottom-right-radius: 6%;
+  box-shadow: inset 0 0.25em 0.5em rgba(0, 0, 0, 0.4), inset 0 -0.15em 0.3em rgba(0, 0, 0, 0.15), 0 0.5em 1em black;
+}
+#keyboard .keys > .key.white[state="down"] {
+  -webkit-transform: rotateX(-17deg);
+  transform: rotateX(-17deg);
+}
+#keyboard .keys > .key.white:hover {
+  background: linear-gradient(to bottom, #ebebeb 0%, #d7d7d7 60%);
+}
+#keyboard .keys > .key.black {
+  width: 6%;
+  margin-left: -3%;
+  height: 70%;
+  background: linear-gradient(to bottom, #1e1e1e 0%, #0a0a0a 50%);
+  border-bottom-left-radius: 8%;
+  border-bottom-right-radius: 8%;
+  border: 0.5em solid rgba(0, 0, 0, 0.3);
+  border-top: none;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  color: #888;
+}
+#keyboard .keys > .key.black::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 15%;
+  box-shadow: inset 0 5px 5px rgba(255, 255, 255, 0.075);
+}
+#keyboard .keys > .key.black[state="down"] {
+  -webkit-transform: scaleX(0.99) scaleY(0.95);
+  transform: scaleX(0.99) scaleY(0.95);
+}
+#keyboard .keys > .key.black:hover {
+  background: linear-gradient(to bottom, #323232 0%, #1e1e1e 50%);
+}
+#keyboard .keys > .key.black + .white {
+  margin-left: -3%;
+  z-index: -1;
+}
+#keyboard .midi {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+}
+
+/*# sourceMappingURL=keyboard.css.map */

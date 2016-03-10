@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            player = io.createGeneratorPlayer( {
+                generator: io.createOscillatorGenerator,
+                unison: 3,
+                unisonDetune: 700,
+                unisonMode: 'chord',
+                tuning: 12,
+                velocitySensitivity: 1,
+                glideTime: 0,
+                polyphony: 10,
+                waveform: 'sawtooth'
+            } ),
+            gain = io.context.createGain();
+            // eqShelf = io.createEQShelf( undefined, undefined, -20, -100 );
+            // diffuseDelay = io.createDiffuseDelay();
+            // reverbEarlyDiffusion = io.createReverbEarlyDiffusion(),
+            // reverbLateDiffusion = io.createReverbLateDiffusion();
+
+        gain.gain.value = 0.1;
+
+        // player.connect( reverbEarlyDiffusion );
+        player.connect( gain );
+        // reverbEarlyDiffusion.connect( reverbLateDiffusion );
+        // reverbEarlyDiffusion.connect( gain );
+        gain.connect( io.master );
+
+        console.log( player );
+
+        function onMIDIMessage( e ) {
+            var data = e.data,
+                cmd = data[0] >> 4,
+                channel = data[0] & 0xf,
+                type = data[0] & 0xf0,
+                note = data[1],
+                velocity = data[2];
+
+            // console.log( cmd, velocity, note );
+
+            if( cmd === 9 ) {
+                if( velocity > 0 ) {
+                    player.start( io.convert.midiToHz( note ), velocity / 127 );
+                }
+                else {
+                    player.stop( io.convert.midiToHz( note ), velocity / 127 );
+                }
+            }
+        }
+
+
+        navigator.requestMIDIAccess().then( function( midi ) {
+
+            console.log( midi );
+
+            var inputs = midi.inputs.values();
+
+            for( var input = inputs.next(); input && !input.done; input = inputs.next() ) {
+                console.log( input.value.name );
+                input.value.onmidimessage = onMIDIMessage;
+            }
+        } );
+    </script>
+</body>
+</html>

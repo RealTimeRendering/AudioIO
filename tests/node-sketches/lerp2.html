@@ -1,0 +1,80 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <input type="number" value="0.5" min="0.0" max="1.0" step="0.01" id="delta" />
+
+    <input type="number" value="0.49" min="0.0" max="1.0" step="0.01" id="delayTime" />
+    <input type="number" value="220" min="1" max="22000" step="1" id="freq" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            lerp = io.createLerp(),
+            scope = new Oscilloscope( 'canvas', io ),
+            osc = io.context.createOscillator(),
+            delay = io.context.createDelay(),
+            delta = io.createConstant( 0.5 ),
+            freq = io.createConstant( 220 ),
+            freqParam = io.createParam(),
+            reciprocal = io.createReciprocal( io.context.sampleRate * 0.5 ),
+            multiply = io.createMultiply(),
+            valueParam = io.createParam(),
+            value = io.createConstant( 0.49 );
+
+        // reciprocalMaxInput.connect( reciprocal._maxInput );
+        freqParam.connect( reciprocal, 0, 0 );
+        reciprocal.connect( multiply, 0, 0 );
+        valueParam.connect( multiply, 0, 1 );
+        multiply.connect( delay.delayTime );
+
+
+        osc.connect( delay );
+        value.connect( valueParam );
+        freq.connect( freqParam );
+        freqParam.connect( osc.frequency );
+
+
+
+        osc.type = 'square';
+        osc.frequency.value = 0;
+        delay.delayTime.value = 0;
+        output.gain.value = 0.01;
+
+        delay.connect( scope.analyser );
+        delay.connect( output );
+        osc.connect( scope.analyser );
+        osc.connect( output );
+        output.connect( io.master );
+
+        osc.start( 0 );
+        scope.start();
+
+        document.querySelector( '#delta' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            console.log( val );
+            delta.value = val;
+        } );
+
+
+        document.querySelector( '#delayTime' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            // delay.delayTime.value = (1 / freq.value) * val;
+            value.value = val;
+        } );
+
+        document.querySelector( '#freq' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            // delay.delayTime.value = (220 / io.context.sampleRate) * val;
+            freq.value = val;
+        } );
+
+    </script>
+</body>
+</html>

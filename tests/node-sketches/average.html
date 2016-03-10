@@ -1,0 +1,97 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <input type="number" value="512" min="1" max="2048" step="2" id="value" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( '#one', io ),
+            scope2 = new Oscilloscope( '#two', io ),
+            scope3 = new Oscilloscope( '#three', io ),
+            bufferSource = io.context.createBufferSource(),
+            abs = io.createAbs(),
+            average = io.createAverage( 20 ),
+            sampleSize = io.createConstant( 512 ),
+            bufferLoader = function( uri ) {
+                return new Promise( function( resolve, reject ) {
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open( 'GET', uri );
+
+                    xhr.responseType = 'arraybuffer';
+
+                    xhr.onload = function() {
+                        if( xhr.status === 200 ) {
+                            // Do the decode dance
+                            io.context.decodeAudioData(
+                                xhr.response,
+                                function(buffer) {
+                                    resolve( buffer );
+                                },
+                                function( e ) {
+                                    reject( e );
+                                }
+                            );
+                        }
+                        else {
+                            reject( Error( 'Status !== 200' ) );
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        reject( Error( 'Network error' ) );
+                    };
+                    xhr.send();
+                } );
+            };
+
+
+        sampleSize.connect( average.controls.sampleSize );
+        abs.connect( average );
+        average.connect( scope2.analyser );
+
+        output.gain.value = 0.1;
+        output.connect( io.master );
+
+        var filter = io.context.createBiquadFilter();
+        var multiply = io.createMultiply( io.context.sampleRate * 0.25 );
+        filter.frequency.value = 0;
+        // filter.Q.value = 5;
+        average.connect( multiply );
+        multiply.connect( filter.frequency );
+        filter.connect( output );
+        filter.connect( scope3.analyser );
+
+        bufferLoader( 'Kit03-150A-13.wav' ).then( function( buffer ) {
+            bufferSource.buffer = buffer;
+            bufferSource.loop = true;
+            bufferSource.playbackRate.value = 1;
+            console.log( bufferSource );
+            bufferSource.connect( abs );
+            bufferSource.connect( filter );
+            bufferSource.connect( scope.analyser );
+            scope.start();
+            scope2.start();
+            scope3.start();
+            bufferSource.start( 0 );
+        }, function( err ) {
+            console.log( err );
+        } );
+
+        document.querySelector( '#value' ).addEventListener( 'input', function( e ) {
+            sampleSize.value = +e.target.value;
+        } );
+
+    </script>
+</body>
+</html>

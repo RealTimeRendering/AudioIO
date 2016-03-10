@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <input type="number" value="0" min="0" max="220" step="0.1" id="value" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( '#one', io ),
+            scope2 = new Oscilloscope( '#two', io ),
+            scope3 = new Oscilloscope( '#three', io ),
+            clamp = io.createClamp( -0.25, 0.25 ),
+            scale = io.createScaleExp( -1, 1, -1, 1, 1 ),
+            scale2 = io.createScaleExp( -1, 1, 1, -1, 2 );
+            osc = io.context.createOscillator(),
+            con = io.createParam(),
+            max = io.createMax(),
+            delay = io.context.createDelay(),
+            feedback = io.context.createGain(),
+            abs = io.createAbs();
+
+        delay.connect( feedback );
+        feedback.connect( delay );
+        feedback.gain.value = 0;
+        delay.delayTime.value = 0.01;
+
+        osc.connect( abs );
+        abs.connect( delay );
+        // osc.connect( feedback.gain );
+        delay.connect( con );
+
+        delay.connect( max, 0, 0 );
+        abs.connect( max, 0, 1 );
+        // max.connect( delay );
+
+
+        osc.frequency.value = 440;
+        osc.type = 'sine';
+
+
+        osc.connect( scope.analyser );
+        abs.connect( scope2.analyser );
+        max.connect( scope3.analyser );
+
+        scale.connect( output );
+        output.connect( io.master );
+        output.gain.value = 0.1;
+
+        scope.start();
+        scope2.start();
+        scope3.start();
+        osc.start();
+
+        document.querySelector( '#value' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            console.log( val );
+            osc.frequency.linearRampToValueAtTime( val, io.context.currentTime + 0.5 );
+        }, false );
+
+    </script>
+</body>
+</html>

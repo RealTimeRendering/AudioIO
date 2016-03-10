@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+	</head>
+	<body>
+		<canvas></canvas>
+
+		<script type="text/javascript">
+
+			var canvas = document.querySelector( 'canvas' ),
+				ctx = canvas.getContext( '2d' ),
+				sineData;
+
+			canvas.width = 320;
+			canvas.height = 240;
+			sineData = [];
+
+			function generateSineData() {
+				var start = -Math.PI,
+					end = Math.PI,
+					size = end - start,
+					incr = size / canvas.width;
+
+				for( var i = 0; i < canvas.width; ++i ) {
+					// sineData[ i ] = Math.sin( start + (incr * i) );
+
+					sineData[ i ] = (2 * ( ( incr * i ) % 1 ) / 1 - 1);
+				}
+			}
+
+			function lerp( start, end, delta ) {
+				return start + ((end - start) * delta);
+			}
+
+			function transform( current, prev ) {
+				var a = sineData[ current ],
+					b = sineData[ prev | 0 ];
+
+				return lerp( a, b, 0.1 );
+			}
+
+			function wrap( input, max ) {
+			    return ((input + max) % (max * 2 + 1)) - max;
+			}
+
+			function tick() {
+				requestAnimationFrame( tick );
+				sineData.unshift( sineData.pop() );
+				draw();
+			}
+
+
+			function draw( data ) {
+				ctx.clearRect( 0, 0, canvas.width, canvas.height );
+				ctx.beginPath();
+				ctx.moveTo( 0, canvas.height * 0.5 - (sineData[ i ]  * canvas.height * 0.5) );
+
+				for( var i = 1; i < sineData.length; ++i ) {
+					var current = i,
+						prev = wrap( i * 3, sineData.length - 1 ),
+						transformed = transform( current, prev );
+
+					ctx.lineTo( i, canvas.height * 0.5 - (transformed * canvas.height * 0.5) );
+				}
+
+				ctx.stroke();
+			}
+
+
+			generateSineData();
+			tick();
+		</script>
+	</body>
+</html>

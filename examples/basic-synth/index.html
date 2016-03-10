@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta id="viewport-meta" name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, shrink-to-fit=no, target-densityDpi=medium-dpi" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+
+		<title>Luke Moody - Roli Code Sample</title>
+
+		<link rel="stylesheet" type="text/css" href="res/css/main.css">
+		<link rel="stylesheet" type="text/css" href="res/css/knob.css">
+		<link rel="stylesheet" type="text/css" href="res/css/keyboard.css">
+	</head>
+	<body>
+		<main>
+			<!-- Oscillator 1 -->
+			<section id="oscillator1">
+				<header>
+					<h2>OSC1</h2>
+				</header>
+				<div id="waveform1" class="knob indicator-circle rubber small" min="0" max="3" value="1" step="1">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Waveform</span>
+				</div>
+
+				<div id="unisonCount1" class="knob indicator-circle small" min="1" max="16" value="2" step="1">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Unison</span>
+				</div>
+
+				<div id="unisonDetune1" class="knob indicator-circle small" min="0" max="14" value="7" step="0.125">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Unison Detune</span>
+				</div>
+
+				<div id="tuning1" class="knob indicator-circle small" min="-24" max="24" value="0" step="1">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Tuning</span>
+				</div>
+			</section>
+
+			<!-- Oscilloscope -->
+			<section id="oscilloscope">
+				<canvas id="scope"></canvas>
+			</section>
+
+			<!-- Oscillator 2 -->
+			<section id="oscillator2">
+				<header>
+					<h2>OSC2</h2>
+				</header>
+
+				<div id="unisonCount2" class="knob indicator-circle small" min="1" max="16" value="2" step="1">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Unison</span>
+				</div>
+
+				<div id="waveform2" class="knob indicator-circle rubber small" min="0" max="3" value="1" step="1">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Waveform</span>
+				</div>
+
+				<div id="tuning2" class="knob indicator-circle small" min="-24" max="24" value="5" step="1">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Tuning</span>
+				</div>
+
+				<div id="unisonDetune2" class="knob indicator-circle small" min="0" max="14" value="5" step="0.125">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Unison Detune</span>
+				</div>
+			</section>
+
+			<!-- ASDR Envelope -->
+			<section id="envelope">
+				<header>
+					<h2>Envelope</h2>
+				</header>
+				<div id="attack" class="knob indicator-circle small rubber" min="0" max="5" value="0.01" step="0.01">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Attack</span>
+				</div>
+
+				<div id="decay" class="knob indicator-circle small rubber" min="0.01" max="5" value="0.5" step="0.01">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Decay</span>
+				</div>
+
+				<div id="sustain" class="knob indicator-circle small rubber" min="0" max="1" value="1" step="0.01">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Sustain</span>
+				</div>
+
+				<div id="release" class="knob indicator-circle small rubber" min="0.01" max="5" value="1" step="0.01">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Release</span>
+				</div>
+			</section>
+
+			<!-- Ping-pong delay FX -->
+			<section id="delay">
+				<header>
+					<h2>Delay</h2>
+				</header>
+				<div id="delayTime" class="knob indicator-circle small" min="0.01" max="1" value="0.15" step="0.0125" exponent="2">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Time</span>
+				</div>
+
+				<div id="delayFeedback" class="knob indicator-circle small" min="0" max="0.999" value="0.7" step="0.0125">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">FB</span>
+				</div>
+
+				<div id="delayDryWet" class="knob indicator-circle small rubber" min="0" max="1" value="0.3" step="0.0125">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Dry / Wet</span>
+				</div>
+			</section>
+
+			<!-- Master controls -->
+			<section id="master">
+				<header>
+					<h2>Master</h2>
+				</header>
+
+				<div id="masterGain" class="knob small indicator-circle rubber" min="0" max="0.5" value="0.1" step="0.0125">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Volume</span>
+				</div>
+
+				<div id="globalTuning" class="knob indicator-circle small" min="-24" max="24" value="0" step="1">
+					<div class="wrapper">
+						<div class="bottom"></div>
+						<div class="top"></div>
+						<div class="indicator"></div>
+					</div>
+					<div class="readout"></div>
+					<span class="label">Global Tuning</span>
+				</div>
+			</section>
+
+			<!-- Footer contains the keyboard controller and MIDI input button -->
+			<footer>
+				<div id="keyboard">
+					<div class="keys">
+						<div class="key white"><span>A</span></div>
+						<div class="key black"><span>W</span></div>
+						<div class="key white"><span>S</span></div>
+						<div class="key black"><span>E</span></div>
+						<div class="key white"><span>D</span></div>
+						<div class="key white"><span>F</span></div>
+						<div class="key black"><span>T</span></div>
+						<div class="key white"><span>G</span></div>
+						<div class="key black"><span>Y</span></div>
+						<div class="key white"><span>H</span></div>
+						<div class="key black"><span>U</span></div>
+						<div class="key white"><span>J</span></div>
+						<div class="key white"><span>K</span></div>
+					</div>
+
+					<div class="midi">
+						<button id="midi-enable">Enable MIDI in</button>
+					</div>
+				</div>
+			</footer>
+		</main>
+
+		<script type="text/javascript" src="../../build/AudioIO.js"></script>
+		<script type="text/javascript" src="res/js/lib/Knob.js"></script>
+		<script type="text/javascript" src="res/js/lib/Oscilloscope.js"></script>
+		<script type="text/javascript" src="res/js/lib/KeyboardInput.js"></script>
+		<script type="text/javascript" src="res/js/app.js"></script>
+	</body>
+</html>

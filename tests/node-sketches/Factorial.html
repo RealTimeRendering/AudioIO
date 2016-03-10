@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) );
+
+        var factorial = io.createFactorial( 5 );
+
+        factorial.connect( io.master );
+
+        io.context.oncomplete = function( e ) {
+            var buffer = e.renderedBuffer.getChannelData( 0 );
+
+            for ( var i = 0; i < buffer.length; i++ ) {
+                console.log( buffer[ i ] );
+            }
+        };
+
+        io.context.startRendering();
+    </script>
+</body>
+</html>
