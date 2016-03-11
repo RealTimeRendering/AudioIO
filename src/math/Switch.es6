@@ -6,7 +6,7 @@ class Switch extends Node {
         super( io, 1, 1 );
 
         // Ensure startingCase is never < 0
-        startingCase = Math.abs( startingCase );
+        startingCase = typeof startingCase === 'number' ? Math.abs( startingCase ) : startingCase;
 
         var graph = this.getGraph();
 
