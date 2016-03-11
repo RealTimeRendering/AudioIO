@@ -38,7 +38,7 @@ class DryWetNode extends Node {
         this.fader.gain.value = 0;
 
         // Create the control node. It sets the fader's value.
-        this.dryWetControl = this.io.createParam( dryWetValue );
+        this.dryWetControl = this.io.createParam();
         this.dryWetControl.connect( this.fader.gain );
 
         // Invert the fader node's phase
