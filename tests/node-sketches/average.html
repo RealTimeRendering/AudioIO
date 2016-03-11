@@ -20,8 +20,8 @@
             scope3 = new Oscilloscope( '#three', io ),
             bufferSource = io.context.createBufferSource(),
             abs = io.createAbs(),
-            average = io.createAverage( 20 ),
-            sampleSize = io.createConstant( 512 ),
+            average = io.createAverage( 100 ),
+            sampleSize = io.createConstant( 50 ),
             bufferLoader = function( uri ) {
                 return new Promise( function( resolve, reject ) {
                     var xhr = new XMLHttpRequest();
