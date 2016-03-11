@@ -30,10 +30,12 @@ export default {
             this.outputs[ outputChannel ].disconnect( node.inputs[ inputChannel ] );
         }
 
-        else {
-            console.error( 'ASSERT NOT REACHED' );
-            console.log( arguments );
-            console.trace();
+        else if( node === undefined && this.outputs ) {
+            this.outputs.forEach( function( n ) {
+                if( n && typeof n.disconnect === 'function' ) {
+                    n.disconnect();
+                }
+            } );
         }
     }
 };

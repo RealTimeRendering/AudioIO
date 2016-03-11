@@ -1,5 +1,5 @@
-// Need to override existing .connect functions
-// for native AudioParams and AudioNodes...
+// Need to override existing .connect and .disconnect
+// functions for "native" AudioParams and AudioNodes...
 // I don't like doing this, but s'gotta be done :(
 ( function() {
     var originalAudioNodeConnect = AudioNode.prototype.connect,
@@ -24,8 +24,7 @@
     };
 
     AudioNode.prototype.disconnect = function( node, outputChannel = 0, inputChannel = 0 ) {
-        console.log( arguments );
-        if ( node.inputs ) {
+        if ( node && node.inputs ) {
             if ( Array.isArray( node.inputs ) ) {
                 this.disconnect( node.inputs[ inputChannel ] );
             }
@@ -39,6 +38,9 @@
         }
         else if ( node instanceof AudioParam ) {
             originalAudioNodeDisconnect.call( this, node, outputChannel );
+        }
+        else if ( node === undefined ) {
+            originalAudioNodeDisconnect.apply( this, arguments );
         }
     };
 }() );
