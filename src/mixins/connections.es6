@@ -21,7 +21,19 @@ export default {
         }
     },
 
-    disconnect: function( node, outputChannel, inputChannel ) {
+    disconnect: function( node, outputChannel = 0, inputChannel = 0) {
+        if ( node instanceof AudioParam || node instanceof AudioNode ) {
+            this.outputs[ outputChannel ].disconnect.call( this.outputs[ outputChannel ], node, 0, inputChannel );
+        }
 
+        else if ( node && node.inputs && node.inputs.length ) {
+            this.outputs[ outputChannel ].disconnect( node.inputs[ inputChannel ] );
+        }
+
+        else {
+            console.error( 'ASSERT NOT REACHED' );
+            console.log( arguments );
+            console.trace();
+        }
     }
 };
