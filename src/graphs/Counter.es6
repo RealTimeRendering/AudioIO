@@ -1,7 +1,9 @@
 import "../core/AudioIO.es6";
 import Node from "../core/Node.es6";
 
-
+// TODO:
+//  - Make increment, limit, and stepTime
+//    into controllable Params.
 class Counter extends Node {
 
     constructor( io, increment, limit, stepTime ) {
