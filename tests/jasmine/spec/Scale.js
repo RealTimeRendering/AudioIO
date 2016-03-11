@@ -36,7 +36,9 @@ describe( "Math / Scale", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createScale( 0, 1, 10, 100 );
+        var n = io.createScale( 0, 1, 10, 100 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
@@ -44,16 +46,16 @@ describe( "Math / Scale", function() {
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
 
-        expect( n._lowIn ).toEqual( null );
-        expect( n._lowOut ).toEqual( null );
-        expect( n._highIn ).toEqual( null );
-        expect( n._highOut ).toEqual( null );
-        expect( n.inputMinusLowIn ).toEqual( null );
-        expect( n.highInMinusLowIn ).toEqual( null );
-        expect( n.divide ).toEqual( null );
-        expect( n.highOutMinusLowOut ).toEqual( null );
-        expect( n.multiply ).toEqual( null );
-        expect( n.add ).toEqual( null );
+        expect( n.controls.lowIn ).toEqual( null );
+        expect( n.controls.lowOut ).toEqual( null );
+        expect( n.controls.highIn ).toEqual( null );
+        expect( n.controls.highOut ).toEqual( null );
+        expect( graph.inputMinusLowIn ).toEqual( null );
+        expect( graph.highInMinusLowIn ).toEqual( null );
+        expect( graph.divide ).toEqual( null );
+        expect( graph.highOutMinusLowOut ).toEqual( null );
+        expect( graph.multiply ).toEqual( null );
+        expect( graph.add ).toEqual( null );
     } );
 
 

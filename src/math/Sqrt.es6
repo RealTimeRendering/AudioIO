@@ -11,6 +11,9 @@ import Node from "../core/Node.es6";
 //          x = 0.5 * ( x + (input / x) );
 //      }
 // }
+
+// TODO:
+//  - Make sure Sqrt uses getGraph and setGraph.
 class SqrtHelper {
     constructor( io, previousStep, input, maxInput ) {
         this.multiply = io.createMultiply( 0.5 );
@@ -67,21 +70,21 @@ class Sqrt extends Node {
         this.steps[ this.steps.length - 1 ].output.connect( this.outputs[ 0 ] );
     }
 
-    cleanUp() {
-        super();
+    // cleanUp() {
+    //     super();
 
-        this.x0.cleanUp();
+    //     this.x0.cleanUp();
 
-        this.steps[ 0 ] = null;
+    //     this.steps[ 0 ] = null;
 
-        for( var i = this.steps.length - 1; i >= 1; --i ) {
-            this.steps[ i ].cleanUp();
-            this.steps[ i ] = null;
-        }
+    //     for( var i = this.steps.length - 1; i >= 1; --i ) {
+    //         this.steps[ i ].cleanUp();
+    //         this.steps[ i ] = null;
+    //     }
 
-        this.x0 = null;
-        this.steps = null;
-    }
+    //     this.x0 = null;
+    //     this.steps = null;
+    // }
 }
 
 

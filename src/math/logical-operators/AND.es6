@@ -22,15 +22,6 @@ class AND extends LogicalOperator {
 
         this.setGraph( graph );
     }
-
-    cleanUp() {
-        super();
-
-        var graph = this.getGraph( this );
-
-        graph.multiply.cleanUp();
-        graph.multiply = null;
-    }
 }
 
 export default AND;

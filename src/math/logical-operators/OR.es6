@@ -23,18 +23,6 @@ class OR extends LogicalOperator {
 
         this.setGraph( graph );
     }
-
-    cleanUp() {
-        super();
-
-        var graph = this.getGraph();
-
-        graph.equalTo.cleanUp();
-        graph.equalTo = null;
-
-        graph.max.cleanUp();
-        graph.max = null;
-    }
 }
 
 export default OR;

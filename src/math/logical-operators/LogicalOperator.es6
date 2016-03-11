@@ -17,14 +17,6 @@ class LogicalOperator extends Node {
 
         this.setGraph( graph );
     }
-
-    cleanUp() {
-        super();
-
-        var graph = this.getGraph();
-        graph.clamp.cleanUp();
-        graph.clamp = null;
-    }
 }
 
 export default LogicalOperator;

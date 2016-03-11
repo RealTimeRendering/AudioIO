@@ -9,39 +9,28 @@ class Divide extends Node {
     constructor( io, value, maxInput ) {
         super( io, 1, 1 );
 
+        var graph = this.getGraph();
+
+
         this.inputs[ 1 ] = this.io.createParam( value );
-
-        this._value = this.inputs[ 1 ].value;
-
         this.outputs[ 0 ].gain.value = 0.0;
 
-        this.reciprocal = this.io.createReciprocal( maxInput );
-        this.inputs[ 1 ].connect( this.reciprocal );
+        graph.reciprocal = this.io.createReciprocal( maxInput );
+        this.inputs[ 1 ].connect( graph.reciprocal );
 
         this.inputs[ 0 ].connect( this.outputs[ 0 ] );
-        this.reciprocal.connect( this.outputs[ 0 ].gain );
+        graph.reciprocal.connect( this.outputs[ 0 ].gain );
 
         this.controls.divisor = this.inputs[ 1 ];
-    }
 
-    cleanUp() {
-        super();
-        this.reciprocal.cleanUp();
-        this.reciprocal = null;
-        this._value = null;
+        this.setGraph( graph );
     }
 
     get value() {
-        return this._value;
+        return this.inputs[ 1 ].value;
     }
     set value( value ) {
-        if ( typeof value === 'number' ) {
-            this._value = value;
-
-            // if( this.inputs[ 0 ] instanceof Constant ) {
-            this.inputs[ 1 ].value = this._value;
-            // }
-        }
+        this.inputs[ 1 ].value = value;
     }
 
     get maxInput() {

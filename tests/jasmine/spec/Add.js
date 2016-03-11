@@ -40,162 +40,125 @@ describe( "Math / Add", function() {
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.control ).toEqual( null );
+        expect( n.controls.value ).toEqual( null );
     } );
 
     it( 'should add two positive inputs together', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
-            _node,
-            input1, input2;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 1 ),
+                    b = io.createConstant( 1 ),
+                    node = io.createAdd();
 
-        input1 = _io.createConstant( 1 );
-        input2 = _io.createConstant( 1 );
-        _node = _io.createAdd();
-
-        input1.connect( _node, 0, 0 );
-        input2.connect( _node, 0, 1 );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 2 );
+                a.connect( node, 0, 0 );
+                b.connect( node, 0, 1 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 2 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
     it( 'should add two negative inputs together', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
-            _node,
-            input1, input2;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( -1 ),
+                    b = io.createConstant( -1 ),
+                    node = io.createAdd();
 
-        input1 = _io.createConstant( -1 );
-        input2 = _io.createConstant( -1 );
-        _node = _io.createAdd();
-
-        input1.connect( _node, 0, 0 );
-        input2.connect( _node, 0, 1 );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( -2 );
+                a.connect( node, 0, 0 );
+                b.connect( node, 0, 1 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( -2 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
     it( 'should add a positive and a negative input together', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
-            _node,
-            input1, input2;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 10 ),
+                    b = io.createConstant( -1 ),
+                    node = io.createAdd();
 
-        input1 = _io.createConstant( 10 );
-        input2 = _io.createConstant( -1 );
-        _node = _io.createAdd();
-
-        input1.connect( _node, 0, 0 );
-        input2.connect( _node, 0, 1 );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 9 );
+                a.connect( node, 0, 0 );
+                b.connect( node, 0, 1 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 9 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
 
     it( 'should take one numerical argument and add it to any incoming connections', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
-            _node,
-            input1;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 10 ),
+                    node = io.createAdd( 5 );
 
-        input1 = _io.createConstant( 10 );
-        _node = _io.createAdd( 2 );
-
-        input1.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 12 );
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 15 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
     it( 'should allow for numerical argument to be changed after creation', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
-            _node,
-            input1;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 10 ),
+                    node = io.createAdd( 5 );
 
-        input1 = _io.createConstant( 10 );
-        _node = _io.createAdd( 2 );
+                node.value = 100;
 
-        input1.connect( _node );
-        _node.connect( _io.master );
-
-        _node.value = 4;
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 14 );
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 110 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
     it( 'should allow for numerical argument to be driven by another input', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
-            _node,
-            input1;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 10 ),
+                    b = io.createConstant( -5 ),
+                    node = io.createAdd();
 
-        input1 = _io.createConstant( 10 );
-        _node = _io.createAdd();
-
-        var driver = _io.createConstant( 2 );
-        driver.connect( _node.controls.value );
-
-        input1.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 12 );
+                a.connect( node, 0, 0 );
+                b.connect( node.controls.value );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 5 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 } );

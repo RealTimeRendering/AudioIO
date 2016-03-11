@@ -6,43 +6,62 @@ class Lerp extends Node {
     /**
      * @param {Object} io Instance of AudioIO.
      */
-    constructor( io ) {
+    constructor( io, start, end, delta ) {
         super( io, 3, 1 );
 
-        this.add = this.io.createAdd();
-        this.subtract = this.io.createSubtract();
-        this.multiply = this.io.createMultiply();
+        var graph = this.getGraph();
 
-        this.start = this.io.createParam();
-        this.end = this.io.createParam();
-        this.delta = this.io.createParam();
+        graph.add = this.io.createAdd();
+        graph.subtract = this.io.createSubtract();
+        graph.multiply = this.io.createMultiply();
 
-        this.end.connect( this.subtract, 0, 0 );
-        this.start.connect( this.subtract, 0, 1 );
-        this.subtract.connect( this.multiply, 0, 0 );
-        this.delta.connect( this.multiply, 0, 1 );
+        graph.start = this.io.createParam( start );
+        graph.end = this.io.createParam( end );
+        graph.delta = this.io.createParam( delta );
 
-        this.start.connect( this.add, 0, 0 );
-        this.multiply.connect( this.add, 0, 1 );
+        graph.end.connect( graph.subtract, 0, 0 );
+        graph.start.connect( graph.subtract, 0, 1 );
+        graph.subtract.connect( graph.multiply, 0, 0 );
+        graph.delta.connect( graph.multiply, 0, 1 );
 
-        this.add.connect( this.outputs[ 0 ] );
+        graph.start.connect( graph.add, 0, 0 );
+        graph.multiply.connect( graph.add, 0, 1 );
 
-        this.inputs[ 0 ].connect( this.start );
-        this.inputs[ 1 ].connect( this.end );
-        this.inputs[ 2 ].connect( this.delta );
+        graph.add.connect( this.outputs[ 0 ] );
 
-        this.controls.start = this.start;
-        this.controls.end = this.end;
-        this.controls.delta = this.delta;
+        this.inputs[ 0 ].connect( graph.start );
+        this.inputs[ 1 ].connect( graph.end );
+        this.inputs[ 2 ].connect( graph.delta );
+
+        this.controls.start = graph.start;
+        this.controls.end = graph.end;
+        this.controls.delta = graph.delta;
+
+        this.setGraph( graph );
     }
 
-    cleanUp() {
-        super();
+    get start() {
+        return this.getGraph().start.value;
+    }
+    set start( value ) {
+        this.getGraph().start.value = value;
+    }
 
-        // TODO..!
+    get end() {
+        return this.getGraph().end.value;
+    }
+    set end( value ) {
+        this.getGraph().end.value = value;
+    }
+
+    get delta() {
+        return this.getGraph().delta.value;
+    }
+    set delta( value ) {
+        this.getGraph().delta.value = value;
     }
 }
 
-AudioIO.prototype.createLerp = function() {
+AudioIO.prototype.createLerp = function( start, end, delta ) {
     return new Lerp( this );
 };

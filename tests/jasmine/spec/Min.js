@@ -32,7 +32,9 @@ describe( "Math / Min", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createMin( 5 );
+        var n = io.createMin( 5 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
@@ -40,7 +42,7 @@ describe( "Math / Min", function() {
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
         expect( n.controls.value ).toEqual( null );
-        expect( n.lessThan ).toEqual( null );
+        expect( graph.lessThan ).toEqual( null );
     } );
 
 

@@ -1,47 +1,41 @@
 import "../core/AudioIO.es6";
 import Node from "../core/Node.es6";
 
-/**
- * [Clamp description]
- * @param {[type]} io       [description]
- * @param {[type]} minValue [description]
- * @param {[type]} maxValue [description]
- */
+
 class Clamp extends Node {
     constructor( io, minValue, maxValue ) {
-        super( io, 0, 0 ); // io, 1, 1
+        super( io, 1, 1 ); // io, 1, 1
 
-        this.min = this.io.createMin( maxValue );
-        this.max = this.io.createMax( minValue );
+        var graph = this.getGraph();
 
-        this.min.connect( this.max );
+        graph.min = this.io.createMin( maxValue );
+        graph.max = this.io.createMax( minValue );
 
-        this.inputs = [ this.min ];
-        this.outputs = [ this.max ];
+        // this.inputs = [ graph.min ];
+        // this.outputs = [ graph.max ];
+        this.inputs[ 0 ].connect( graph.min );
+        graph.min.connect( graph.max );
+        graph.max.connect( this.outputs[ 0 ] );
 
         // Store controllable params.
-        this.controls.min = this.min.controls.value;
-        this.controls.max = this.max.controls.value;
+        this.controls.min = graph.min.controls.value;
+        this.controls.max = graph.max.controls.value;
+
+        this.setGraph( graph );
     }
 
-    cleanUp() {
-        super();
-        this.min = null;
-        this.max = null;
+    get min() {
+        return this.getGraph().max.value;
+    }
+    set min( value ) {
+        this.getGraph().max.value = value;
     }
 
-    get minValue() {
-        return this.min.value;
+    get max() {
+        return this.getGraph().min.value;
     }
-    set minValue( value ) {
-        this.min.value = value;
-    }
-
-    get maxValue() {
-        return this.max.value;
-    }
-    set maxValue( value ) {
-        this.max.value = value;
+    set max( value ) {
+        this.getGraph().min.value = value;
     }
 }
 

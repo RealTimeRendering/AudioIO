@@ -30,12 +30,6 @@ class Wrap extends Node {
         this.reciprocal = this.io.createReciprocal( this.context.sampleRate * 0.5 );
         this.multiply1 = this.io.createMultiply();
     }
-
-    cleanUp() {
-        super();
-        this.shaper.cleanUp();
-        this.shaper = null;
-    }
 }
 
 AudioIO.prototype.createWrap = function( wrapTo, value ) {

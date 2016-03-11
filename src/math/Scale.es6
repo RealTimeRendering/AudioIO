@@ -16,105 +16,75 @@ class Scale extends Node {
     constructor( io, lowIn, highIn, lowOut, highOut ) {
         super( io, 1, 1 );
 
-        lowIn = typeof lowIn === 'number' ? lowIn : 0;
-        highIn = typeof highIn === 'number' ? highIn : 1;
-        lowOut = typeof lowOut === 'number' ? lowOut : 0;
-        highOut = typeof highOut === 'number' ? highOut : 10;
+        var graph = this.getGraph();
 
-        this._lowIn = this.io.createParam( lowIn );
-        this._highIn = this.io.createParam( highIn );
-        this._lowOut = this.io.createParam( lowOut );
-        this._highOut = this.io.createParam( highOut );
+        this.controls.lowIn = this.io.createParam( lowIn );
+        this.controls.highIn = this.io.createParam( highIn );
+        this.controls.lowOut = this.io.createParam( lowOut );
+        this.controls.highOut = this.io.createParam( highOut );
 
-        // this.inputs = [ this.context.createGain() ];
 
         // (input-lowIn)
-        this.inputMinusLowIn = this.io.createSubtract();
-        this.inputs[ 0 ].connect( this.inputMinusLowIn, 0, 0 );
-        this._lowIn.connect( this.inputMinusLowIn, 0, 1 );
+        graph.inputMinusLowIn = this.io.createSubtract();
+        this.inputs[ 0 ].connect( graph.inputMinusLowIn, 0, 0 );
+        this.controls.lowIn.connect( graph.inputMinusLowIn, 0, 1 );
 
         // (highIn-lowIn)
-        this.highInMinusLowIn = this.io.createSubtract();
-        this._highIn.connect( this.highInMinusLowIn, 0, 0 );
-        this._lowIn.connect( this.highInMinusLowIn, 0, 1 );
+        graph.highInMinusLowIn = this.io.createSubtract();
+        this.controls.highIn.connect( graph.highInMinusLowIn, 0, 0 );
+        this.controls.lowIn.connect( graph.highInMinusLowIn, 0, 1 );
 
         // ((input-lowIn) / (highIn-lowIn))
-        this.divide = this.io.createDivide();
-        this.inputMinusLowIn.connect( this.divide, 0, 0 );
-        this.highInMinusLowIn.connect( this.divide, 0, 1 );
+        graph.divide = this.io.createDivide();
+        graph.inputMinusLowIn.connect( graph.divide, 0, 0 );
+        graph.highInMinusLowIn.connect( graph.divide, 0, 1 );
 
         // (highOut-lowOut)
-        this.highOutMinusLowOut = this.io.createSubtract();
-        this._highOut.connect( this.highOutMinusLowOut, 0, 0 );
-        this._lowOut.connect( this.highOutMinusLowOut, 0, 1 );
+        graph.highOutMinusLowOut = this.io.createSubtract();
+        this.controls.highOut.connect( graph.highOutMinusLowOut, 0, 0 );
+        this.controls.lowOut.connect( graph.highOutMinusLowOut, 0, 1 );
 
         // ((input-lowIn) / (highIn-lowIn)) * (highOut-lowOut)
-        this.multiply = this.io.createMultiply();
-        this.divide.connect( this.multiply, 0, 0 );
-        this.highOutMinusLowOut.connect( this.multiply, 0, 1 );
+        graph.multiply = this.io.createMultiply();
+        graph.divide.connect( graph.multiply, 0, 0 );
+        graph.highOutMinusLowOut.connect( graph.multiply, 0, 1 );
 
         // ((input-lowIn) / (highIn-lowIn)) * (highOut-lowOut) + lowOut
-        this.add = this.io.createAdd();
-        this.multiply.connect( this.add, 0, 0 );
-        this._lowOut.connect( this.add, 0, 1 );
+        graph.add = this.io.createAdd();
+        graph.multiply.connect( graph.add, 0, 0 );
+        this.controls.lowOut.connect( graph.add, 0, 1 );
 
-        this.add.connect( this.outputs[ 0 ] );
-    }
+        graph.add.connect( this.outputs[ 0 ] );
 
-    cleanUp() {
-        super();
-
-        this._lowIn.cleanUp();
-        this._highIn.cleanUp();
-        this._lowOut.cleanUp();
-        this._highOut.cleanUp();
-        this.inputMinusLowIn.cleanUp();
-        this.highInMinusLowIn.cleanUp();
-        this.divide.cleanUp();
-        this.highOutMinusLowOut.cleanUp();
-        this.multiply.cleanUp();
-
-        this._lowIn = null;
-        this._highIn = null;
-        this._lowOut = null;
-        this._highOut = null;
-        this.inputMinusLowIn = null;
-        this.highInMinusLowIn = null;
-        this.divide = null;
-        this.highOutMinusLowOut = null;
-        this.multiply = null;
-        this.add = null;
+        this.setGraph( graph );
     }
 
     get lowIn() {
-        return this._lowIn.value;
+        return this.controls.lowIn.value;
     }
     set lowIn( value ) {
-        this._lowIn.value = value;
+        this.controls.lowIn.value = value;
     }
-
 
     get highIn() {
-        return this._highIn.value;
+        return this.controls.highIn.value;
     }
     set highIn( value ) {
-        this._highIn.value = value;
+        this.controls.highIn.value = value;
     }
 
     get lowOut() {
-        return this._lowOut.value;
+        return this.controls.lowOut.value;
     }
     set lowOut( value ) {
-        this._lowOut.value = value;
+        this.controls.lowOut.value = value;
     }
-
-
 
     get highOut() {
-        return this._highOut.value;
+        return this.controls.highOut.value;
     }
     set highOut( value ) {
-        this._highOut.value = value;
+        this.controls.highOut.value = value;
     }
 }
 

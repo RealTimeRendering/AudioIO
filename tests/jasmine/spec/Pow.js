@@ -32,15 +32,19 @@ describe( "Math / Pow", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createPow( 2 );
+        var n = io.createPow( 2 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
+        console.log( graph );
+
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.multipliers ).toEqual( null );
-        expect( n._value ).toEqual( null );
+        expect( graph.multipliers ).toEqual( null );
+        expect( graph.value ).toEqual( null );
     } );
 
 

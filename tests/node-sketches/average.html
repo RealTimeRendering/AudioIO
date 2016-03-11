@@ -64,7 +64,7 @@
         output.connect( io.master );
 
         var filter = io.context.createBiquadFilter();
-        var multiply = io.createMultiply( io.context.sampleRate * 0.25 );
+        var multiply = io.createMultiply( io.context.sampleRate * 0.5 );
         filter.frequency.value = 0;
         // filter.Q.value = 5;
         average.connect( multiply );

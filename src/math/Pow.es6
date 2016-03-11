@@ -10,53 +10,51 @@ class Pow extends Node {
     constructor( io, value ) {
         super( io, 1, 1 );
 
-        this.multipliers = [];
-        this._value = value;
+        var graph = this.getGraph();
+
+        graph.multipliers = [];
+        graph.value = value;
 
         for ( var i = 0, node = this.inputs[ 0 ]; i < value - 1; ++i ) {
-            this.multipliers[ i ] = this.io.createMultiply();
-            this.inputs[ 0 ].connect( this.multipliers[ i ].controls.value );
-            node.connect( this.multipliers[ i ] );
-            node = this.multipliers[ i ];
+            graph.multipliers[ i ] = this.io.createMultiply();
+            this.inputs[ 0 ].connect( graph.multipliers[ i ].controls.value );
+            node.connect( graph.multipliers[ i ] );
+            node = graph.multipliers[ i ];
         }
 
         node.connect( this.outputs[ 0 ] );
+
+        this.setGraph( graph );
     }
 
     cleanUp() {
+        this.getGraph().value = null;
         super();
-
-        for( var i = this.multipliers.length - 1; i >= 0; --i ) {
-            this.multipliers[ i ].cleanUp();
-            this.multipliers[ i ] = null;
-        }
-
-        this.multipliers = null;
-
-        this._value = null;
     }
 
     get value() {
-        return this._value;
+        return this.getGraph().value;
     }
     set value( value ) {
-        for ( var i = this.multipliers.length - 1; i >= 0; --i ) {
-            this.multipliers[ i ].disconnect();
-            this.multipliers.splice( i, 1 );
+        var graph = this.getGraph();
+
+        this.inputs[ 0 ].disconnect( graph.multipliers[ 0 ] );
+
+        for ( var i = graph.multipliers.length - 1; i >= 0; --i ) {
+            graph.multipliers[ i ].disconnect();
+            graph.multipliers.splice( i, 1 );
         }
 
-        this.inputs[ 0 ].disconnect();
-
         for ( var i = 0, node = this.inputs[ 0 ]; i < value - 1; ++i ) {
-            this.multipliers[ i ] = this.io.createMultiply();
-            this.inputs[ 0 ].connect( this.multipliers[ i ].controls.value );
-            node.connect( this.multipliers[ i ] );
-            node = this.multipliers[ i ];
+            graph.multipliers[ i ] = this.io.createMultiply();
+            this.inputs[ 0 ].connect( graph.multipliers[ i ].controls.value );
+            node.connect( graph.multipliers[ i ] );
+            node = graph.multipliers[ i ];
         }
 
         node.connect( this.outputs[ 0 ] );
 
-        this._value = value;
+        graph.value = value;
     }
 }
 

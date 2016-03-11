@@ -42,28 +42,23 @@ describe( "Math / DegToRad", function() {
     } );
 
     it( 'should correctly calculate conversion of degrees to radians', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) ),
-            _node,
-            input,
-            angle = 123,
-            result = angle * ( Math.PI / 180 );
+        var angle = -Math.PI + Math.random() * ( Math.PI * 2 ),
+            expected = angle * ( Math.PI / 180 );
 
-        input = _io.createConstant( angle );
-        _node = _io.createDegToRad();
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( angle ),
+                    node = io.createDegToRad();
 
-        input.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toBeCloseTo( result );
+                a.connect( node );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toBeCloseTo( expected );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 } );

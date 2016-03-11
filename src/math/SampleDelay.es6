@@ -7,27 +7,32 @@ class SampleDelay extends Node {
     /**
      * @param {Object} io Instance of AudioIO.
      */
-    constructor( io, numSamples = 1 ) {
+    constructor( io, numSamples ) {
         super( io, 1, 1 );
 
-        this.sampleSize = this.io.createConstant( 1 / this.context.sampleRate );
-        this.multiply = this.io.createMultiply();
+        var graph = this.getGraph();
+
+        graph.sampleSize = this.io.createConstant( 1 / this.context.sampleRate );
+        graph.multiply = this.io.createMultiply();
         this.controls.samples = this.io.createParam( numSamples );
 
-        this.sampleSize.connect( this.multiply, 0, 0 );
-        this.controls.samples.connect( this.multiply, 0, 1 );
+        graph.sampleSize.connect( graph.multiply, 0, 0 );
+        this.controls.samples.connect( graph.multiply, 0, 1 );
 
-        this.delay = this.context.createDelay();
-        this.delay.delayTime.value = 0;
-        this.multiply.connect( this.delay.delayTime );
-        this.inputs[ 0 ].connect( this.delay );
-        this.delay.connect( this.outputs[ 0 ] );
+        graph.delay = this.context.createDelay();
+        graph.delay.delayTime.value = 0;
+        graph.multiply.connect( graph.delay.delayTime );
+        this.inputs[ 0 ].connect( graph.delay );
+        graph.delay.connect( this.outputs[ 0 ] );
+
+        this.setGraph( graph );
     }
 
-    cleanUp() {
-        super();
-        this.delay.cleanUp();
-        this.delay = null;
+    get samples() {
+        return this.controls.samples.value;
+    }
+    set samples( value ) {
+        this.controls.samples.value = value;
     }
 }
 

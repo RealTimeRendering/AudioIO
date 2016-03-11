@@ -24,11 +24,6 @@ class Exp extends Node{
     set value( value ) {
         this.control.setValueAtTime( value, this.context.currentTime );
     }
-
-    cleanUp() {
-        super();
-        this.control = null;
-    }
 }
 
 

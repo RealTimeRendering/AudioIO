@@ -10,16 +10,14 @@ class Square extends Node {
     constructor( io ) {
         super( io, 1, 1 );
 
-        this.multiply = this.io.createMultiply();
-        this.inputs[ 0 ].connect( this.multiply, 0, 0 );
-        this.inputs[ 0 ].connect( this.multiply, 0, 1 );
-        this.multiply.connect( this.outputs[ 0 ] );
-    }
+        var graph = this.getGraph();
 
-    cleanUp() {
-        super();
-        this.multiply.cleanUp();
-        this.multiply = null;
+        graph.multiply = this.io.createMultiply();
+        this.inputs[ 0 ].connect( graph.multiply, 0, 0 );
+        this.inputs[ 0 ].connect( graph.multiply, 0, 1 );
+        graph.multiply.connect( this.outputs[ 0 ] );
+
+        this.setGraph( graph );
     }
 }
 

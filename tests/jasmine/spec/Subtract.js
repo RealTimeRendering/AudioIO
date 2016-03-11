@@ -36,14 +36,16 @@ describe( "Math / Subtract", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createSubtract( 6 );
+        var n = io.createSubtract( 6 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.negate ).toEqual( null );
+        expect( graph.negate ).toEqual( null );
         expect( n.controls.value ).toEqual( null );
     } );
 

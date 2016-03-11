@@ -10,23 +10,19 @@ class Subtract extends Node {
     constructor( io, value ) {
         super( io, 1, 1 );
 
-        this.negate = this.io.createNegate();
+        var graph = this.getGraph();
+
+        graph.negate = this.io.createNegate();
 
         this.inputs[ 1 ] = this.io.createParam( value );
 
         this.inputs[ 0 ].connect( this.outputs[ 0 ] );
-        this.inputs[ 1 ].connect( this.negate );
-        this.negate.connect( this.outputs[ 0 ] );
+        this.inputs[ 1 ].connect( graph.negate );
+        graph.negate.connect( this.outputs[ 0 ] );
 
         this.controls.value = this.inputs[ 1 ];
-    }
 
-    cleanUp() {
-        super();
-        this.negate.cleanUp();
-
-        this.controls.value = null;
-        this.negate = null;
+        this.setGraph( graph );
     }
 
     get value() {

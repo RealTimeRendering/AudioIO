@@ -9,32 +9,24 @@ class Floor extends Node {
     constructor( io ) {
         super( io, 1, 1 );
 
-        this.shaper = this.io.createWaveShaper( this.io.curves.Floor );
+        var graph = this.getGraph();
+
+        graph.shaper = this.io.createWaveShaper( this.io.curves.Floor );
 
         // This branching is because inputting `0` values
         // into the waveshaper above outputs -0.5 ;(
-        this.ifElse = this.io.createIfElse();
-        this.equalToZero = this.io.createEqualToZero();
+        graph.ifElse = this.io.createIfElse();
+        graph.equalToZero = this.io.createEqualToZero();
 
-        this.inputs[ 0 ].connect( this.equalToZero );
-        this.equalToZero.connect( this.ifElse.if );
-        this.inputs[ 0 ].connect( this.ifElse.then );
-        this.shaper.connect( this.ifElse.else );
+        this.inputs[ 0 ].connect( graph.equalToZero );
+        graph.equalToZero.connect( graph.ifElse.if );
+        this.inputs[ 0 ].connect( graph.ifElse.then );
+        graph.shaper.connect( graph.ifElse.else );
 
-        this.inputs[ 0 ].connect( this.shaper );
-        this.ifElse.connect( this.outputs[ 0 ] );
-    }
+        this.inputs[ 0 ].connect( graph.shaper );
+        graph.ifElse.connect( this.outputs[ 0 ] );
 
-    cleanUp() {
-        super();
-
-        this.shaper.cleanUp();
-        this.ifElse.cleanUp();
-        this.equalToZero.cleanUp();
-
-        this.shaper = null;
-        this.ifElse = null;
-        this.equalToZero = null;
+        this.setGraph( graph );
     }
 }
 

@@ -20,14 +20,16 @@ describe( "Math / Sign", function() {
 
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createAbs( 100 );
+        var n = io.createSign( 100 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.shaper ).toEqual( null );
+        expect( graph.shaper ).toEqual( null );
     } );
 
 

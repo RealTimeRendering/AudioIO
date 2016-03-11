@@ -32,7 +32,9 @@ describe( "Math / Max", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createMax( 5 );
+        var n = io.createMax( 5 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
@@ -40,7 +42,7 @@ describe( "Math / Max", function() {
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
         expect( n.controls.value ).toEqual( null );
-        expect( n.greaterThan ).toEqual( null );
+        expect( graph.greaterThan ).toEqual( null );
     } );
 
 

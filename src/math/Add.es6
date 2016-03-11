@@ -26,15 +26,10 @@ class Add extends Node{
     }
 
     get value() {
-        return this.controls.value;
+    	return this.controls.value.value;
     }
     set value( value ) {
-        this.controls.value.setValueAtTime( value, this.context.currentTime );
-    }
-
-    cleanUp() {
-        super();
-        this.control = null;
+    	this.controls.value.value = value;
     }
 }
 

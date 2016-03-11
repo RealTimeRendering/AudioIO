@@ -11,7 +11,6 @@ class NOT extends LogicalOperator {
         super( io );
 
         var graph = this.getGraph();
-        console.log( this, graph );
 
         graph.abs = this.io.createAbs( 100 );
         graph.subtract = this.io.createSubtract( 1 );
@@ -24,21 +23,6 @@ class NOT extends LogicalOperator {
         graph.round.connect( this.outputs[ 0 ] );
 
         this.setGraph( graph );
-    }
-
-    cleanUp() {
-        super();
-        // this.abs.cleanUp();
-        // this.abs = null;
-
-        var graph = this.getGraph();
-
-        graph.subtract.cleanUp();
-        graph.abs.cleanUp();
-        graph.round.cleanUp();
-        graph.subtract = null;
-        graph.abs = null;
-        graph.round = null;
     }
 }
 

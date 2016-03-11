@@ -32,15 +32,17 @@ describe( "Math / Reciprocal", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createReciprocal( 10 );
+        var n = io.createReciprocal( 10 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n._maxInput ).toEqual( null );
-        expect( n.shaper ).toEqual( null );
+        expect( graph.maxInput ).toEqual( null );
+        expect( graph.shaper ).toEqual( null );
     } );
 
 

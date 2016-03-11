@@ -33,16 +33,17 @@ describe( "Math / EqualTo", function() {
 
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createEqualTo( 10 );
+        var n = io.createEqualTo( 10 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.shaper ).toEqual( null );
-        // expect( n.control ).toEqual( null );
-        expect( n.inversion ).toEqual( null );
+        expect( graph.shaper ).toEqual( null );
+        expect( graph.inversion ).toEqual( null );
     } );
 
 

@@ -32,120 +32,158 @@ describe( "Math / Clamp", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createClamp( 2, 10 );
+        var n = io.createClamp( 2, 10 ),
+            graph = n.getGraph();
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.min ).toEqual( null );
-        expect( n.max ).toEqual( null );
+        expect( graph.min ).toEqual( null );
+        expect( graph.max ).toEqual( null );
     } );
 
 
     it( 'should output input when input > minValue && input < maxValue', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) ),
-            _node,
-            input;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 12 ),
+                    node = io.createClamp( 2, 123 );
 
-        input = _io.createConstant( 12 );
-        _node = _io.createClamp( 2, 123 );
-
-        input.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 12 );
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 12 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
     it( 'should output minValue when input < minValue ', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) ),
-            _node,
-            input;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 12 ),
+                    node = io.createClamp( 34, 123 );
 
-        input = _io.createConstant( 12 );
-        _node = _io.createClamp( 43, 123 );
-
-        input.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 43 );
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 34 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
     it( 'should output maxValue when input > maxValue', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) ),
-            _node,
-            input;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 12 ),
+                    node = io.createClamp( 0, 2 );
 
-        input = _io.createConstant( 543 );
-        _node = _io.createClamp( 2, 123 );
-
-        input.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 123 );
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 2 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
+
+    it( 'should allow numerical arguments to be changed after creation (1)', function( done ) {
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 543 ),
+                    node = io.createClamp( 34, 123 );
+
+                node.min = 1000;
+                node.max = 5000;
+
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 1000 );
+            },
+            onComplete: function() {
+                done();
+            }
+        } );
+    } );
+
+    it( 'should allow numerical arguments to be changed after creation (2)', function( done ) {
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 2500 ),
+                    node = io.createClamp( 34, 123 );
+
+                node.min = 1000;
+                node.max = 5000;
+
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 2500 );
+            },
+            onComplete: function() {
+                done();
+            }
+        } );
+    } );
+
+    it( 'should allow numerical arguments to be changed after creation (3)', function( done ) {
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 6000 ),
+                    node = io.createClamp( 34, 123 );
+
+                node.min = 1000;
+                node.max = 5000;
+
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 5000 );
+            },
+            onComplete: function() {
+                done();
+            }
+        } );
+    } );
+
 
 
     it( 'values should be able to be set using audio inputs', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) ),
-            _node,
-            input;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 543 ),
+                    min = io.createConstant( 2 ),
+                    max = io.createConstant( 123 ),
+                    node = io.createClamp();
 
-        input = _io.createConstant( 543 );
-        _node = _io.createClamp();
+                min.connect( node.controls.min );
+                max.connect( node.controls.max );
 
-        var min = _io.createConstant( 2 ),
-            max = _io.createConstant( 123 );
-
-        min.connect( _node.min.controls.value );
-        max.connect( _node.max.controls.value );
-
-        input.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( 123 );
+                a.connect( node, 0, 0 );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toEqual( 123 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
-
-
 } );

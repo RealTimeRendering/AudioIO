@@ -1,4 +1,4 @@
-import "../core/AudioIO.es6";
+ import "../core/AudioIO.es6";
 import Node from "../core/Node.es6";
 
 /**
@@ -16,11 +16,6 @@ class Multiply extends Node {
         this.inputs[ 1 ].connect( this.outputs[ 0 ].gain );
 
         this.controls.value = this.inputs[ 1 ];
-    }
-
-    cleanUp() {
-        super();
-        this.control = null;
     }
 
     get value() {

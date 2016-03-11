@@ -32,14 +32,16 @@ describe( "Math / IfElse", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createIfElse();
+        var n = io.createIfElse(),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.switch ).toEqual( null );
+        expect( graph.switch ).toEqual( null );
         expect( n.if ).toEqual( null );
         expect( n.then ).toEqual( null );
         expect( n.else ).toEqual( null );

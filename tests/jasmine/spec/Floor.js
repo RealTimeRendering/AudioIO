@@ -32,16 +32,17 @@ describe( "Math / Floor", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createFloor();
+        var n = io.createFloor(),
+            graph = n.getGraph();
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.shaper ).toEqual( null );
-        expect( n.ifElse ).toEqual( null );
-        expect( n.equalToZero ).toEqual( null );
+        expect( graph.shaper ).toEqual( null );
+        expect( graph.ifElse ).toEqual( null );
+        expect( graph.equalToZero ).toEqual( null );
     } );
 
 

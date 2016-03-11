@@ -30,7 +30,9 @@ describe( "Math / Round", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createRound( 10 );
+        var n = io.createRound( 10 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
@@ -38,9 +40,8 @@ describe( "Math / Round", function() {
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
 
-        expect( n.floor ).toEqual( null );
-        expect( n.add ).toEqual( null );
-        // expect( n.shaper ).toEqual( null );
+        expect( graph.floor ).toEqual( null );
+        expect( graph.add ).toEqual( null );
     } );
 
 

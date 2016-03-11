@@ -33,14 +33,16 @@ describe( "Math / Switch", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createSwitch( 3 );
+        var n = io.createSwitch( 3 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.cases ).toEqual( null );
+        expect( graph.cases ).toEqual( null );
         expect( n.controls.index ).toEqual( null );
     } );
 

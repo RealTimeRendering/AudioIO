@@ -16,42 +16,39 @@ class Reciprocal extends Node {
         super( io, 1, 1 );
 
         var factor = maxInput || 100,
-            gain = Math.pow( factor, -1 );
+            gain = Math.pow( factor, -1 ),
+            graph = this.getGraph();
 
-        this._maxInput = this.context.createGain();
-        this._maxInput.gain.setValueAtTime( gain, this.context.currentTime );
+        graph.maxInput = this.context.createGain();
+        graph.maxInput.gain.setValueAtTime( gain, this.context.currentTime );
 
         // this.inputs[ 0 ] = this.context.createGain();
         this.inputs[ 0 ].gain.setValueAtTime( 0.0, this.context.currentTime );
 
-        this.shaper = this.io.createWaveShaper( this.io.curves.Reciprocal );
+        graph.shaper = this.io.createWaveShaper( this.io.curves.Reciprocal );
 
         // this.outputs[ 0 ] = this.context.createGain();
         this.outputs[ 0 ].gain.setValueAtTime( 0.0, this.context.currentTime );
 
-        this.io.constantDriver.connect( this._maxInput );
-        this._maxInput.connect( this.inputs[ 0 ].gain );
-        this._maxInput.connect( this.outputs[ 0 ].gain );
+        this.io.constantDriver.connect( graph.maxInput );
+        graph.maxInput.connect( this.inputs[ 0 ].gain );
+        graph.maxInput.connect( this.outputs[ 0 ].gain );
 
-        this.inputs[ 0 ].connect( this.shaper );
-        this.shaper.connect( this.outputs[ 0 ] );
-    }
+        this.inputs[ 0 ].connect( graph.shaper );
+        graph.shaper.connect( this.outputs[ 0 ] );
 
-    cleanUp() {
-        super();
-        this.shaper.cleanUp();
-        this._maxInput.disconnect();
-        this.shaper = null;
-        this._maxInput = null;
+        this.setGraph( graph );
     }
 
     get maxInput() {
-        return this._maxInput.gain;
+        return graph.maxInput.gain;
     }
     set maxInput( value ) {
+        var graph = this.getGraph();
+
         if ( typeof value === 'number' ) {
-            this._maxInput.gain.cancelScheduledValues( this.context.currentTime );
-            this._maxInput.gain.setValueAtTime( 1 / value, this.context.currentTime );
+            graph.maxInput.gain.cancelScheduledValues( this.context.currentTime );
+            graph.maxInput.gain.setValueAtTime( 1 / value, this.context.currentTime );
         }
     }
 }

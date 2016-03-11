@@ -3,26 +3,25 @@ import Node from "../../core/Node.es6";
 
 class LessThan extends Node {
     constructor( io, value ) {
-        super( io, 1, 0 );
+        super( io, 1, 1 );
+
+        var graph = this.getGraph();
 
         this.controls.value = this.io.createParam( value );
 
-        this.valueInversion = this.context.createGain();
-        this.valueInversion.gain.value = -1;
+        graph.valueInversion = this.context.createGain();
+        graph.valueInversion.gain.value = -1;
 
-        this.controls.value.connect( this.valueInversion );
+        this.controls.value.connect( graph.valueInversion );
 
         this.inputs[ 0 ].gain.value = -100000;
-        this.outputs[ 0 ] = this.io.createWaveShaper( this.io.curves.GreaterThanZero );
+        graph.shaper = this.io.createWaveShaper( this.io.curves.GreaterThanZero );
 
-        this.valueInversion.connect( this.inputs[ 0 ] );
-        this.inputs[ 0 ].connect( this.outputs[ 0 ] );
-    }
+        graph.valueInversion.connect( this.inputs[ 0 ] );
+        this.inputs[ 0 ].connect( graph.shaper );
+        graph.shaper.connect( this.outputs[ 0 ] );
 
-    cleanUp() {
-        super();
-        this.controls.value.cleanUp();
-        this.controls.value = null;
+        this.setGraph( graph );
     }
 
     get value() {

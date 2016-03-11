@@ -94,18 +94,6 @@ class Floor extends Node {
         this.inputs[ 0 ].connect( this.shaper );
         this.ifElse.connect( this.outputs[ 0 ] );
     }
-
-    cleanUp() {
-        super();
-
-        this.shaper.cleanUp();
-        this.ifElse.cleanUp();
-        this.greaterThanZero.cleanUp();
-
-        this.shaper = null;
-        this.ifElse = null;
-        this.greaterThanZero = null;
-    }
 }
 
 AudioIO.prototype.createFloor = function() {

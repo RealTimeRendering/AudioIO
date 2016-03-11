@@ -20,14 +20,16 @@ describe( "Math / Abs", function() {
 
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createAbs( 100 );
+        var n = io.createAbs( 100 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
 
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
-        expect( n.shaper ).toEqual( null );
+        expect( graph.shaper ).toEqual( null );
     } );
 
 
@@ -44,78 +46,77 @@ describe( "Math / Abs", function() {
 
 
     it( 'should output posiive number when input is positive', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) ),
-            _node,
-            input;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 20 ),
+                    node = io.createAbs();
 
-        input = _io.createConstant( 20 );
-        _node = _io.createAbs( 100 );
-
-        input.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toBeGreaterThan( 0 );
+                a.connect( node );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toBeCloseTo( 20, 1 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
 
     it( 'should output a positive number when input is negative', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) ),
-            _node,
-            input;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( -0.1 ),
+                    node = io.createAbs();
 
-        input = _io.createConstant( -0.1 );
-        _node = _io.createAbs( 100 );
-
-        input.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toBeGreaterThan( 0 );
+                a.connect( node );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                // expect( value ).toBeCloseTo( 0.1, 1 );
+                expect( value ).toBeCloseTo( 0.1, 1 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
 
     it( 'should output 0 (or fairly close to it [+-0.015]) when input is equal to 0', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.1, 44100 ) ),
-            _node,
-            input;
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( 0 ),
+                    node = io.createAbs();
 
-        input = _io.createConstant( 0 );
-        _node = _io.createAbs( 100 );
-
-        input.connect( _node );
-        _node.connect( _io.master );
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] <= 0.015 ).toBeTruthy();
+                a.connect( node );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toBeCloseTo( 0, 1 );
+            },
+            onComplete: function() {
+                done();
             }
-
-            done();
-        };
-
-        _io.context.startRendering();
+        } );
     } );
 
+    it( 'should handle large numbers', function( done ) {
+        offlineAudioTest( {
+            onSetup: function( io ) {
+                var a = io.createConstant( -12457 ),
+                    node = io.createAbs( 200 );
 
+                a.connect( node );
+                node.connect( io.master );
+            },
+            onCompare: function( value ) {
+                expect( value ).toBeCloseTo( 12457, 0 );
+            },
+            onComplete: function() {
+                done();
+            }
+        } );
+    } );
 } );

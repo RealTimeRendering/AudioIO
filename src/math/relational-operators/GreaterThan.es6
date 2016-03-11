@@ -3,31 +3,25 @@ import Node from "../../core/Node.es6";
 
 class GreaterThan extends Node {
     constructor( io, value ) {
-        super( io, 1, 0 );
+        super( io, 1, 1 );
+
+        var graph = this.getGraph();
 
         this.controls.value = this.io.createParam( value );
-        this.inversion = this.context.createGain();
+        graph.inversion = this.context.createGain();
 
-        this.inversion.gain.value = -1;
+        graph.inversion.gain.value = -1;
 
         this.inputs[ 0 ].gain.value = 100000;
-        this.outputs[ 0 ] = this.io.createWaveShaper( this.io.curves.GreaterThanZero );
+        graph.shaper = this.io.createWaveShaper( this.io.curves.GreaterThanZero );
 
 
-        this.controls.value.connect( this.inversion );
-        this.inversion.connect( this.inputs[ 0 ] );
-        this.inputs[ 0 ].connect( this.outputs[ 0 ] );
-    }
+        this.controls.value.connect( graph.inversion );
+        graph.inversion.connect( this.inputs[ 0 ] );
+        this.inputs[ 0 ].connect( graph.shaper );
+        graph.shaper.connect( this.outputs[ 0 ] );
 
-
-    cleanUp() {
-        super();
-
-        this.controls.value.cleanUp();
-        this.controls.value = null;
-
-        this.inversion.disconnect();
-        this.inversion = null;
+        this.setGraph( graph );
     }
 
     get value() {

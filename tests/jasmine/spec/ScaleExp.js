@@ -40,7 +40,9 @@ describe( "Math / ScaleExp", function() {
     } );
 
     it( 'should have a cleanUp method and mark items for GC.', function() {
-        var n = io.createScaleExp( 0, 1, 10, 100, 2 );
+        var n = io.createScaleExp( 0, 1, 10, 100, 2 ),
+            graph = n.getGraph();
+
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
@@ -48,27 +50,27 @@ describe( "Math / ScaleExp", function() {
         expect( n.inputs ).toEqual( null );
         expect( n.outputs ).toEqual( null );
 
-        expect( n._lowIn ).toEqual( null );
-        expect( n._highIn ).toEqual( null );
-        expect( n._lowOut ).toEqual( null );
-        expect( n._highOut ).toEqual( null );
-        expect( n._exponent ).toEqual( null );
-        expect( n.inputMinusLowIn ).toEqual( null );
-        expect( n.minusInput ).toEqual( null );
-        expect( n.highInMinusLowIn ).toEqual( null );
-        expect( n.divide ).toEqual( null );
-        expect( n.negativeDivide ).toEqual( null );
-        expect( n.highOutMinusLowOut ).toEqual( null );
-        expect( n.pow ).toEqual( null );
-        expect( n.negativePowNegate ).toEqual( null );
-        expect( n.negativePow ).toEqual( null );
-        expect( n.elseIfBranch ).toEqual( null );
-        expect( n.elseIfMultiply ).toEqual( null );
-        expect( n.elseBranch ).toEqual( null );
-        expect( n.greaterThanZero ).toEqual( null );
-        expect( n.ifGreaterThanZero ).toEqual( null );
-        expect( n.equalsZero ).toEqual( null );
-        expect( n.ifEqualsZero ).toEqual( null );
+        expect( n.controls.lowIn ).toEqual( null );
+        expect( n.controls.highIn ).toEqual( null );
+        expect( n.controls.lowOut ).toEqual( null );
+        expect( n.controls.highOut ).toEqual( null );
+        expect( graph._exponent ).toEqual( null );
+        expect( graph.inputMinusLowIn ).toEqual( null );
+        expect( graph.minusInput ).toEqual( null );
+        expect( graph.highInMinusLowIn ).toEqual( null );
+        expect( graph.divide ).toEqual( null );
+        expect( graph.negativeDivide ).toEqual( null );
+        expect( graph.highOutMinusLowOut ).toEqual( null );
+        expect( graph.pow ).toEqual( null );
+        expect( graph.negativePowNegate ).toEqual( null );
+        expect( graph.negativePow ).toEqual( null );
+        expect( graph.elseIfBranch ).toEqual( null );
+        expect( graph.elseIfMultiply ).toEqual( null );
+        expect( graph.elseBranch ).toEqual( null );
+        expect( graph.greaterThanZero ).toEqual( null );
+        expect( graph.ifGreaterThanZero ).toEqual( null );
+        expect( graph.equalsZero ).toEqual( null );
+        expect( graph.ifEqualsZero ).toEqual( null );
     } );
 
     it( 'should have one input and one output', function() {
