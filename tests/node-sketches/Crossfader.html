@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas width="220"></canvas>
+
+    <label for="phase">Phase offset</label>
+    <input type="number" value="0" min="0" max="1" step="0.01" id="phase" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( 'canvas', io ),
+            osc1 = io.context.createOscillator(),
+            osc2 = io.context.createOscillator(),
+            osc3 = io.context.createOscillator(),
+            osc4 = io.context.createOscillator(),
+            xfader = io.createCrossfader( 6, 0 ),
+            // scale = io.createScale( 0, 4, 0, 4 ),
+            controller = io.createConstant( 0 ),
+            frequency = io.createConstant( 440 ),
+            counter = io.createCounter( 0.001, 5 ),
+            noiseOsc = io.createNoiseOscillator(),
+            phaseOffset = io.createPhaseOffset(),
+            phaseOsc = io.context.createOscillator();
+
+        // phaseOsc.frequency.value = 880;
+        // phaseOsc.start();
+        // phaseOffset.controls.phase.value = ;
+        // phaseOsc.connect( phaseOffset.controls.phase );
+
+        osc1.type = 'sine';
+        osc2.type = 'triangle';
+        osc3.type = 'sawtooth';
+        osc4.type = 'square';
+
+        // osc2.frequency.value = 220;
+        // osc3.frequency.value = 330;
+        // osc4.frequency.value = 110;
+
+        osc1.connect( xfader, 0, 0 );
+        osc2.connect( xfader, 0, 1 );
+        osc3.connect( xfader, 0, 2 );
+        osc4.connect( xfader, 0, 3 );
+        noiseOsc.connect( xfader, 0, 4 );
+        osc1.connect( xfader, 0, 5 );
+
+        counter.connect( xfader.controls.index );
+        xfader.connect( phaseOffset );
+        // controller.connect( phaseOffset.controls.phase );
+        frequency.connect( phaseOffset.controls.frequency );
+        phaseOffset.connect( scope.analyser );
+        phaseOffset.connect( output );
+
+        // Take the output of the crossfader,
+        // multiply it by 4, and tell the result
+        // to modulate the phase offset.
+        var multiply = io.createMultiply(),
+            multiplicand  = io.createConstant( 4 );
+
+        multiplicand.connect( multiply, 0, 1 );
+        xfader.connect( multiply );
+        multiply.connect( phaseOffset.controls.phase );
+
+        osc1.start();
+        osc2.start();
+        osc3.start();
+        osc4.start();
+        noiseOsc.start();
+
+        output.gain.value = 0.01;
+
+
+        output.connect( io.master );
+        scope.start( 0 );
+
+        document.querySelector( '#phase' ).addEventListener( 'input', function( e ) {
+            controller.value = +e.target.value;
+        } );
+
+    </script>
+</body>
+</html>
