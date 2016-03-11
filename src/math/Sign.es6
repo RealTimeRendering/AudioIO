@@ -1,7 +1,6 @@
 import "../core/AudioIO.es6";
 import Node from "../core/Node.es6";
 
-
 class Sign extends Node {
 
     /**
@@ -10,30 +9,25 @@ class Sign extends Node {
     constructor( io ) {
         super( io, 1, 1 );
 
-        this.shaper = this.io.createWaveShaper( function( x ) {
-            return Math.sign( x );
-        }, 4096 );
+        var graph = this.getGraph();
 
-        this.ifElse = this.io.createIfElse();
-        this.equalToZero = this.io.createEqualToZero();
+        graph.shaper = this.io.createWaveShaper( this.io.curves.Sign );
 
-        this.inputs[ 0 ].connect( this.equalToZero );
-        this.inputs[ 0 ].connect( this.ifElse.then );
-        this.inputs[ 0 ].connect( this.shaper );
+        graph.ifElse = this.io.createIfElse();
+        graph.equalToZero = this.io.createEqualToZero();
 
-        this.equalToZero.connect( this.ifElse.if );
-        this.shaper.connect( this.ifElse.else );
-        this.ifElse.connect( this.outputs[ 0 ] );
-    }
+        this.inputs[ 0 ].connect( graph.equalToZero );
+        this.inputs[ 0 ].connect( graph.ifElse.then );
+        this.inputs[ 0 ].connect( graph.shaper );
 
+        graph.equalToZero.connect( graph.ifElse.if );
+        graph.shaper.connect( graph.ifElse.else );
+        graph.ifElse.connect( this.outputs[ 0 ] );
 
-    cleanUp() {
-        super();
-        this.shaper.cleanUp();
-        this.shaper = null;
+        this.setGraph( graph );
     }
 }
 
-AudioIO.prototype.createSign = function( accuracy ) {
-    return new Sign( this, accuracy );
+AudioIO.prototype.createSign = function() {
+    return new Sign( this );
 };
