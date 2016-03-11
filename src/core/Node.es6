@@ -48,10 +48,68 @@ class Node {
         this.outputs.push( this.context.createGain() );
     }
 
+    _cleanUpSingle( item, parent, key ) {
+        var self = this;
+
+        // Handle arrays by looping over them
+        // and recursively calling this function with each
+        // array member.
+        if( Array.isArray( item ) ) {
+            item.forEach(function( node, index ) {
+                self._cleanUpSingle( node, item, index );
+            } );
+
+            parent[ key ] = null;
+        }
+
+        // AudioIO nodes...
+        else if( item && typeof item.cleanUp === 'function' ) {
+            if( typeof item.disconnect === 'function' ) {
+                item.disconnect();
+            }
+
+            item.cleanUp();
+
+            if( parent ) {
+                parent[ key ] = null;
+            }
+        }
+
+        // "Native" nodes.
+        else if( item && typeof item.disconnect === 'function' ) {
+            item.disconnect();
+
+            if( parent ) {
+                parent[ key ] = null;
+            }
+        }
+    }
+
     cleanUp() {
+        var graph = this.getGraph();
         this._cleanUpInOuts();
         this._cleanIO();
-        this.disconnect();
+
+        // Find any nodes at the top level,
+        // disconnect and nullify them.
+        for( var i in this ) {
+            this._cleanUpSingle( this[ i ], this, i );
+        }
+
+        // Do the same for any nodes in the graph.
+        for( var i in graph ) {
+            this._cleanUpSingle( graph[ i ], graph, i );
+        }
+
+        // ...and the same for any control nodes.
+        for( var i in this.controls ) {
+            this._cleanUpSingle( this.controls[ i ], this.controls, i );
+        }
+
+        // Finally, attempt to disconnect this Node.
+        if( typeof this.disconnect === 'function' ) {
+            this.disconnect();
+        }
     }
 
 
