@@ -1,5 +1,5 @@
 describe( "Math / Sine", function() {
-    var node = io.createSine( 1 );
+    var node = io.createSin( 1 );
 
 
     it( 'should have a context', function() {
@@ -40,7 +40,7 @@ describe( "Math / Sine", function() {
             expected = Math.sin( val );
 
         input = _io.createConstant( val );
-        _node = _io.createSine();
+        _node = _io.createSin();
 
         input.connect( _node );
         _node.connect( _io.master );
@@ -64,7 +64,7 @@ describe( "Math / Sine", function() {
             val = -Math.PI + Math.random() * ( Math.PI * 2 ),
             expected = Math.sin( val );
 
-        _node = _io.createSine( val );
+        _node = _io.createSin( val );
 
         _node.connect( _io.master );
 

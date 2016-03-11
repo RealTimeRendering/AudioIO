@@ -17,7 +17,7 @@ import './instruments/GeneratorPlayer.es6';
 
 
 import './math/trigonometry/DegToRad.es6';
-import './math/trigonometry/Sine.es6';
+import './math/trigonometry/Sin.es6';
 import './math/trigonometry/Cos.es6';
 import './math/trigonometry/Tan.es6';
 import './math/trigonometry/RadToDeg.es6';
