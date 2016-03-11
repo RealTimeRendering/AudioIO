@@ -51,7 +51,8 @@ app.createAudioPieces = function() {
     //
     // Arguments: delay time (seconds), feedback level (0-1)
     app.delay = app.io.createPingPongDelay( 0.25, 0.8 );
-
+    app.delayDryWet = app.io.createConstant( 0 );
+    app.delayDryWet.connect( app.delay.controls.dryWet );
 
     // Create an intermediary gain node to sit between
     // the synth and the master output so ears will live
@@ -178,7 +179,8 @@ app.onDelayFeedbackKnobChange = function( value ) {
     app.delay.feedbackLevel = value;
 };
 app.onDelayDryWetKnobChange = function( value ) {
-    app.delay.dryWetControl.value = value;
+    app.delayDryWet.value = value;
+    // app.delay.dryWetControl.value = value;
 };
 
 

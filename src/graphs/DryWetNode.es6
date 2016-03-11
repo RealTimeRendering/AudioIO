@@ -22,7 +22,7 @@ import Node from "../core/Node.es6";
 // input1's gain level will change from 0 to 1,
 // whilst input2's gain level will change from 1 to 0.
 class DryWetNode extends Node {
-    constructor( io, dryWetValue = 0 ) {
+    constructor( io ) {
         super( io, 2, 1 );
 
         this.dry = this.inputs[ 0 ];
@@ -64,8 +64,8 @@ class DryWetNode extends Node {
 
 
 
-AudioIO.prototype.createDryWetNode = function( value ) {
-    return new DryWetNode( this, value );
+AudioIO.prototype.createDryWetNode = function() {
+    return new DryWetNode( this );
 };
 
 export default DryWetNode;
