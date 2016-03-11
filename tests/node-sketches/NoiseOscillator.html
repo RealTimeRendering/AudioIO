@@ -1,0 +1,43 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <input type="number" value="0" min="0" max="2" id="noiseType" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="SpectrumAnalyser.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            spectrumAnalyser = new SpectrumAnalyser( '#one', io ),
+            scope = new Oscilloscope( '#two', io ),
+            osc = io.createNoiseOscillator(),
+            output = io.context.createGain(),
+            type = io.createConstant( 0 );
+
+        output.gain.value = 1;
+
+        type.connect( osc.controls.type );
+
+        osc.connect( output );
+        output.connect( spectrumAnalyser.analyser );
+        output.connect( scope.analyser );
+        output.connect( io.master );
+        osc.start();
+        spectrumAnalyser.start();
+        scope.start();
+
+
+        document.getElementById( 'noiseType' ).addEventListener( 'input', function( e ) {
+            console.log( +e.target.value );
+            type.value = +e.target.value;
+        }, false );
+    </script>
+</body>
+</html>
