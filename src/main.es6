@@ -8,8 +8,6 @@ import './core/WaveShaper.es6';
 
 
 // import './graphs/Crossfader.es6';
-import './graphs/DryWetNode.es6';
-import './graphs/PhaseOffset.es6';
 
 import './fx/Delay.es6';
 import './fx/PingPongDelay.es6';
@@ -68,14 +66,13 @@ import './envelopes/ASDREnvelope.es6';
 
 import './graphs/EQShelf.es6';
 import './graphs/DiffuseDelay.es6';
-// import './graphs/ReverbEarlyDiffusion.es6';
-// import './graphs/ReverbLateDiffusion.es6';
-
-// import './graphs/ParabolicSaturation.es6';
-
 import './graphs/OscillatorBank.es6';
-import './graphs/EnvelopeFollower.es6';
 import './graphs/Counter.es6';
+import './graphs/DryWetNode.es6';
+import './graphs/PhaseOffset.es6';
+import './graphs/Crossfader.es6';
+
+import './oscillators/NoiseOscillator.es6';
 
 // import './graphs/Sketch.es6';
 
