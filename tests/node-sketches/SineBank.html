@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <input type="number" value="0" min="0" max="5" step="1" id="harmonics1" />
+    <input type="number" value="0" min="0" max="5" step="1" id="harmonics2" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="SpectrumAnalyser.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            spectrumAnalyser = new SpectrumAnalyser( '#one', io ),
+            scope = new Oscilloscope( '#two', io ),
+            osc = io.createSineBank( 2 ),
+            frequency = io.createConstant( 220 ),
+            harmonicControl1 = io.createConstant( 1 ),
+            harmonicControl2 = io.createConstant( 1 ),
+            output = io.context.createGain();
+
+        output.gain.value = 0.1;
+
+        frequency.connect( osc.controls.frequency );
+        harmonicControl1.connect( osc.controls.harmonics[ 0 ] );
+        harmonicControl2.connect( osc.controls.harmonics[ 1 ] );
+        osc.connect( output );
+        osc.connect( spectrumAnalyser.analyser );
+        osc.connect( scope.analyser );
+        output.connect( io.master );
+
+        osc.start();
+        spectrumAnalyser.start();
+        scope.start();
+
+
+        document.getElementById( 'harmonics1' ).addEventListener( 'input', function( e ) {
+            harmonicControl1.value = +e.target.value;
+        }, false );
+
+        document.getElementById( 'harmonics2' ).addEventListener( 'input', function( e ) {
+            harmonicControl2.value = +e.target.value;
+        }, false );
+    </script>
+</body>
+</html>

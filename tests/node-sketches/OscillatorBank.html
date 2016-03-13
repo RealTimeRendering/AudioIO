@@ -36,6 +36,7 @@
         output.connect( io.master );
 
         scope.start( 0 );
+        bank.start();
 
         document.querySelector( '#waveform' ).addEventListener( 'input', function( e ) {
             var val = +e.target.value;

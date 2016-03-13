@@ -76,6 +76,7 @@ import './graphs/Crossfader.es6';
 import './oscillators/OscillatorBank.es6';
 import './oscillators/NoiseOscillator.es6';
 import './oscillators/FMOscillator.es6';
+import './oscillators/SineBank.es6';
 
 // import './graphs/Sketch.es6';
 

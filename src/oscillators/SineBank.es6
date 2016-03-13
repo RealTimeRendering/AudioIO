@@ -16,7 +16,6 @@ class SineBank extends Node {
 
         this.controls.frequency = this.io.createParam();
         this.controls.detune = this.io.createParam();
-        this.controls.waveform = graph.crossfader.controls.index;
         this.controls.harmonics = [];
 
         for ( var i = 0; i < numSines; ++i ) {
@@ -32,9 +31,11 @@ class SineBank extends Node {
             harmonicMultiplier.connect( osc.frequency );
             this.controls.detune.connect( osc.detune );
 
+            this.controls.harmonics[ i ] = harmonicControl;
+
             osc.start( 0 );
-            osc.connect( graph.crossfader, 0, i );
-            graph.outputLevel.push( osc );
+            osc.connect( graph.outputLevel );
+            graph.oscillators.push( osc );
         }
 
         graph.outputLevel.connect( this.outputs[ 0 ] );
