@@ -12,6 +12,7 @@ import './core/WaveShaper.es6';
 import './fx/Delay.es6';
 import './fx/PingPongDelay.es6';
 import './fx/SineShaper.es6';
+import './fx/StereoWidth.es6';
 
 import './generators/OscillatorGenerator.es6';
 import './instruments/GeneratorPlayer.es6';

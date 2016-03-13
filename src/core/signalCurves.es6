@@ -179,7 +179,7 @@ Object.defineProperty( signalCurves, 'Sine', {
             sin = Math.sin;
 
         for ( let i = 0, x; i < resolution; ++i ) {
-            x = ( i / resolution ) * 2 - 1;
+            x = ( i / resolution ) * (Math.PI * 2) - Math.PI;
             curve[ i ] = sin( x );
         }
 
