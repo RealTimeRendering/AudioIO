@@ -19,7 +19,7 @@ class NoiseOscillator extends Node {
 
         graph.bufferSources = [];
         graph.outputGain = this.context.createGain();
-        graph.switch = this.io.createSwitch( Object.keys( types ).length, 0 );
+        graph.crossfader = this.io.createCrossfader( Object.keys( types ).length, 0 );
         graph.outputGain.gain.value = 0;
 
         for( var i = 0; i < typeKeys.length; ++i ) {
@@ -30,14 +30,14 @@ class NoiseOscillator extends Node {
             source.loop = true;
             source.start( 0 );
 
-            source.connect( graph.switch, 0, i );
+            source.connect( graph.crossfader, 0, i );
             graph.bufferSources.push( source );
         }
 
-        graph.switch.connect( graph.outputGain );
+        graph.crossfader.connect( graph.outputGain );
         graph.outputGain.connect( this.outputs[ 0 ] );
 
-        this.controls.type = graph.switch.control;
+        this.controls.type = graph.crossfader.controls.index;
         this.setGraph( graph );
     }
 

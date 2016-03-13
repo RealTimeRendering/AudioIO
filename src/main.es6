@@ -11,6 +11,7 @@ import './core/WaveShaper.es6';
 
 import './fx/Delay.es6';
 import './fx/PingPongDelay.es6';
+import './fx/SineShaper.es6';
 
 import './generators/OscillatorGenerator.es6';
 import './instruments/GeneratorPlayer.es6';
@@ -66,13 +67,15 @@ import './envelopes/ASDREnvelope.es6';
 
 import './graphs/EQShelf.es6';
 import './graphs/DiffuseDelay.es6';
-import './graphs/OscillatorBank.es6';
 import './graphs/Counter.es6';
 import './graphs/DryWetNode.es6';
 import './graphs/PhaseOffset.es6';
 import './graphs/Crossfader.es6';
 
+
+import './oscillators/OscillatorBank.es6';
 import './oscillators/NoiseOscillator.es6';
+import './oscillators/FMOscillator.es6';
 
 // import './graphs/Sketch.es6';
 

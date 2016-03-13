@@ -7,7 +7,7 @@
     <canvas id="two"></canvas>
     <canvas id="three"></canvas>
 
-    <input type="number" value="0" min="0" max="2" id="noiseType" />
+    <input type="number" value="0" min="0" max="2" step="0.1" id="noiseType" />
 
     <script type="text/javascript" src="../../build/AudioIO.js"></script>
     <script type="text/javascript" src="SpectrumAnalyser.js"></script>
@@ -21,7 +21,7 @@
             output = io.context.createGain(),
             type = io.createConstant( 0 );
 
-        output.gain.value = 1;
+        output.gain.value = 0.1;
 
         type.connect( osc.controls.type );
 

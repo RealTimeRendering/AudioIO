@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title></title>
+
+    <style type="text/css">
+    label {
+        display: block;
+        margin-top: 1em;
+    }
+    </style>
+</head>
+<body>
+    <canvas id="one"></canvas>
+    <canvas id="two"></canvas>
+    <canvas id="three"></canvas>
+
+    <label for="oscFrequency">Osc Frequency</label>
+    <input type="number" value="440" min="0" max="880" step="1" id="oscFrequency" />
+
+    <label for="oscWaveform">Osc Waveform</label>
+    <input type="number" value="0" min="0" max="3" step="1" id="oscWaveform" />
+
+    <label for="oscFMSelfAmount">Osc FM Self Amount</label>
+    <input type="number" value="0" min="0" max="2" step="0.1" id="oscFMSelfAmount" />
+
+    <label for="oscFMAmount">Osc FM Amount</label>
+    <input type="number" value="0" min="0" max="24000" step="1" id="oscFMAmount" />
+
+    <label for="oscFMFrequency">Osc FM Frequency</label>
+    <input type="number" value="440" min="0" max="880" step="1" id="oscFMFrequency" />
+
+    <label for="oscFMWaveform">Osc FM Waveform</label>
+    <input type="number" value="0" min="0" max="3" step="1" id="oscFMWaveform" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( '#one', io ),
+            osc = io.createFMOscillator(),
+            oscFrequency = io.createConstant( 440 ),
+            oscWaveform = io.createConstant( 0 ),
+            oscFMSelfAmount = io.createConstant( 0 ),
+            oscFMAmount = io.createConstant( 0 ),
+            oscFMFrequency = io.createConstant( 440 ),
+            oscFMWaveform = io.createConstant( 0 );
+
+        console.log( osc, osc.getGraph() );
+
+        output.gain.value = 0.1;
+
+        oscFrequency.connect( osc.controls.frequency );
+        oscWaveform.connect( osc.controls.waveform );
+        oscFMSelfAmount.connect( osc.controls.fmSelfAmount );
+
+        oscFMAmount.connect( osc.controls.fmOscAmount );
+        oscFMFrequency.connect( osc.controls.fmFrequency );
+        oscFMWaveform.connect( osc.controls.fmWaveform );
+
+        osc.connect( scope.analyser );
+        osc.connect( output );
+        output.connect( io.master );
+        // osc.start();
+        scope.start();
+
+        document.querySelector( '#oscFrequency' ).addEventListener( 'input', function( e ) {
+            oscFrequency.value = +e.target.value;
+        }, false );
+
+        document.querySelector( '#oscWaveform' ).addEventListener( 'input', function( e ) {
+            oscWaveform.value = +e.target.value;
+        }, false );
+
+        document.querySelector( '#oscFMSelfAmount' ).addEventListener( 'input', function( e ) {
+            oscFMSelfAmount.value = +e.target.value;
+        }, false );
+
+        document.querySelector( '#oscFMAmount' ).addEventListener( 'input', function( e ) {
+            oscFMAmount.value = +e.target.value;
+        }, false );
+
+        document.querySelector( '#oscFMFrequency' ).addEventListener( 'input', function( e ) {
+            oscFMFrequency.value = +e.target.value;
+        }, false );
+
+        document.querySelector( '#oscFMWaveform' ).addEventListener( 'input', function( e ) {
+            oscFMWaveform.value = +e.target.value;
+        }, false );
+
+    </script>
+</body>
+</html>
