@@ -33,9 +33,11 @@ import './math/relational-operators/EqualTo.es6';
 import './math/relational-operators/EqualToZero.es6';
 import './math/relational-operators/GreaterThan.es6';
 import './math/relational-operators/GreaterThanZero.es6';
+import './math/relational-operators/GreaterThanEqualTo.es6';
 import './math/relational-operators/IfElse.es6';
 import './math/relational-operators/LessThan.es6';
 import './math/relational-operators/LessThanZero.es6';
+import './math/relational-operators/LessThanEqualTo.es6';
 
 import './math/logical-operators/LogicalOperator.es6';
 import './math/logical-operators/AND.es6';
