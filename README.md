@@ -1,7 +1,11 @@
 AudioIO
 =======
 
-**Note:** This library is a work-in-progress! Some graphs are incomplete or broken!
+**Notes:**
+* This library is a work-in-progress. Some graphs are incomplete or broken!
+* Test coverage isn't 100%, nor will it ever be. Some Nodes can only really be tested by ear.
+* Documentation is inbound in the near future.
+* Since this is still pre-alpha, the spec/API might change. There are also a few inconsistences here and there that are known about and will be fixed up!
 
 
 About
@@ -13,7 +17,7 @@ The goal behind this library is to elimate the need to use expensive ScriptProce
 
 
 Features
-========
+--------
 
 * Perform both basic (add, subtract, multiply, divide), complex (abs, sin, cos, tan, max, min, sqrt, reciprocal, pow, etc.), and binary (AND, OR, NOT) maths on audio signals.
 
@@ -24,3 +28,19 @@ Features
 * Calculate phase offsets for oscillators using only WebAudio components.
 
 * Allow for easy creation of envelopes, and oscillators with unison, glide, and polyphony properties.
+
+
+Latest Build
+------------
+
+#####Version
+* 0.0.2
+
+#####New Additions:
+
+* Added SchroederAllPass graph.
+* Added SineShaper.
+* Added StereoRotation.
+* Added StereoWidth.
+* Added SineBank (_n_ sine waves, each with harmonic multiplier control)
+* OscillatorBank and NoiseOscillator now use the Crossfader node to smoothly transition between waveforms if required.
