@@ -6,14 +6,14 @@ import Node from "../core/Node.es6";
     AllPass graphs. This particular graph is shown in Figure2
     in the following paper:
 
-    M. R. Schroeder - Natural Sounding Artificial Reverberation
+        M. R. Schroeder - Natural Sounding Artificial Reverberation
 
-    Journal of the Audio Engineering Society, July 1962.
-    Volume 10, Number 3.
+        Journal of the Audio Engineering Society, July 1962.
+        Volume 10, Number 3.
 
 
     It's available here:
-    http://www.ece.rochester.edu/~zduan/teaching/ece472/reading/Schroeder_1962.pdf
+        http://www.ece.rochester.edu/~zduan/teaching/ece472/reading/Schroeder_1962.pdf
 
 
     There are three main paths an input signal can take:

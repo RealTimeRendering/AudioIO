@@ -16,6 +16,7 @@ import './fx/StereoWidth.es6';
 import './fx/StereoRotation.es6';
 // import './fx/BitReduction.es6';
 import './fx/SchroederAllPass.es6';
+import './fx/DCTrap.es6';
 
 import './generators/OscillatorGenerator.es6';
 import './instruments/GeneratorPlayer.es6';

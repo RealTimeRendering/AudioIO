@@ -1,0 +1,147 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+
+    <label for="delayTimeControl">Delay time (s)</label>
+    <input type="number" value="0.05" min="0" max="1" step="0.01" id="delayTimeControl" />
+
+    <label for="feedbackControl">Feedback</label>
+    <input type="number" value="0.75" min="0" max="1" step="0.1" id="feedbackControl" />
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            bufferSource = io.context.createBufferSource(),
+            scope = new Oscilloscope( 'canvas', io ),
+            bufferLoader = function( uri ) {
+                return new Promise( function( resolve, reject ) {
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open( 'GET', uri );
+
+                    xhr.responseType = 'arraybuffer';
+
+                    xhr.onload = function() {
+                        if( xhr.status === 200 ) {
+                            // Do the decode dance
+                            io.context.decodeAudioData(
+                                xhr.response,
+                                function(buffer) {
+                                    resolve( buffer );
+                                },
+                                function( e ) {
+                                    reject( e );
+                                }
+                            );
+                        }
+                        else {
+                            reject( Error( 'Status !== 200' ) );
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        reject( Error( 'Network error' ) );
+                    };
+                    xhr.send();
+                } );
+            };
+
+
+        // Experimenting with:
+        //  - http://musicdsp.org/showArchiveComment.php?ArchiveID=44
+        var delayValues = [],
+            feedbackValues = [],
+            allpassNodes = [],
+            delayValueControls = [],
+            feedbackControls = [],
+            numDelays = 8,
+            input = io.context.createGain(),
+            out = io.createDCTrap( 500 );
+
+        function createDiffuseDelayGraph() {
+            for( var i = 0; i < numDelays; ++i ) {
+                var schroederAllPass = io.createSchroederAllPass(),
+                    feedbackControl = io.createConstant( 0.75 ),
+                    delayTimeControl = io.createConstant( 0.05 );
+
+                feedbackControl.connect( schroederAllPass.controls.feedback );
+                delayTimeControl.connect( schroederAllPass.controls.delayTime );
+
+                allpassNodes.push( schroederAllPass );
+                feedbackControls.push( feedbackControl );
+                delayValueControls.push( delayTimeControl );
+
+                if( i === 0 ) {
+                    input.connect( schroederAllPass );
+                }
+                else {
+                    allpassNodes[ i - 1 ].connect( allpassNodes[ i ] );
+                }
+
+                if( i === numDelays - 1 ) {
+                    allpassNodes[ i ].connect( out );
+                }
+            }
+        }
+
+        function calculateValues( delayTime, feedback ) {
+            var rev = -3 * delayTime / Math.log10 ( feedback );
+
+            for( var i = 0; i < numDelays; ++i ) {
+                delayValues[ i ] = delayTime / Math.pow( 2, i / numDelays );
+                feedbackValues[ i ] = Math.pow( 10, -( ( 3 * delayValues[ i ] ) / rev ) );
+
+                delayValueControls[ i ].value = delayValues[ i ] / 1000;
+                feedbackControls[ i ].value = feedbackValues[ i ];
+            }
+        }
+
+
+        output.gain.value = 0.1;
+
+
+        createDiffuseDelayGraph();
+        calculateValues( 50, 0.75 );
+
+        out.connect( output );
+        out.connect( scope.analyser );
+        output.connect( io.master );
+        scope.start( 0 );
+
+       bufferLoader( '../B185.wav' ).then( function( buffer ) {
+            bufferSource.buffer = buffer;
+            bufferSource.loop = true;
+            bufferSource.playbackRate.value = 1;
+            bufferSource.connect( input );
+            bufferSource.start( 0 );
+        }, function( err ) {
+            console.log( err );
+        } );
+
+        document.querySelector( '#feedbackControl' ).addEventListener( 'input', function( e ) {
+            calculateValues(
+                +document.querySelector( '#delayTimeControl' ).value * 1000,
+                +e.target.value
+            );
+
+            feedbackControl.value = +e.target.value;
+        } );
+
+        document.querySelector( '#delayTimeControl' ).addEventListener( 'input', function( e ) {
+            calculateValues(
+                +e.target.value * 1000,
+                +document.querySelector( '#feedbackControl' ).value
+            );
+
+            delayTimeControl.value = +e.target.value;
+        } );
+    </script>
+</body>
+</html>
