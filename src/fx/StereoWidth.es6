@@ -15,10 +15,6 @@ import Node from "../core/Node.es6";
 //                   |-> L -> rightMinusLeft( ch1 ) -> |
 //                   |-> R -> rightMinusLeft( ch0 ) -> | -> multiply( coef ) ---> monoMinusStereo( 1 ) -> merger( 0 ) // outL
 //
-
-
-// TODO:
-//  - Convert this to the new ES6 format.
 //
 class StereoWidth extends Node {
     constructor( io, width ) {

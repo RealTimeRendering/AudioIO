@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <label for="rotation">Stereo Rotation (deg, -90 to +90)</label>
+    <input type="number" value="0" min="-90" max="90" step="1" id="rotation" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            stereoRotation = io.createStereoRotation(),
+            rotationControl = io.createConstant( 0 ),
+            bufferSource = io.context.createBufferSource(),
+            scope = new Oscilloscope( 'canvas', io ),
+
+            bufferLoader = function( uri ) {
+                return new Promise( function( resolve, reject ) {
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open( 'GET', uri );
+
+                    xhr.responseType = 'arraybuffer';
+
+                    xhr.onload = function() {
+                        if( xhr.status === 200 ) {
+                            // Do the decode dance
+                            io.context.decodeAudioData(
+                                xhr.response,
+                                function(buffer) {
+                                    resolve( buffer );
+                                },
+                                function( e ) {
+                                    reject( e );
+                                }
+                            );
+                        }
+                        else {
+                            reject( Error( 'Status !== 200' ) );
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        reject( Error( 'Network error' ) );
+                    };
+                    xhr.send();
+                } );
+            };
+
+        rotationControl.connect( stereoRotation.controls.rotation );
+        stereoRotation.connect( scope.analyser );
+        stereoRotation.connect( output );
+        output.connect( io.master );
+        scope.start( 0 );
+
+       bufferLoader( 'stereo.wav' ).then( function( buffer ) {
+            bufferSource.buffer = buffer;
+            bufferSource.loop = true;
+            bufferSource.playbackRate.value = 1;
+            console.log( bufferSource );
+            bufferSource.connect( stereoRotation );
+            bufferSource.start( 0 );
+        }, function( err ) {
+            console.log( err );
+        } );
+
+        document.querySelector( '#rotation' ).addEventListener( 'input', function( e ) {
+            rotationControl.value = +e.target.value * (Math.PI/180);
+        } );
+    </script>
+</body>
+</html>

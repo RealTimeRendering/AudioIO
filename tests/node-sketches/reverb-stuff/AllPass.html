@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+
+    <label for="delayTimeControl">Delay time (s)</label>
+    <input type="number" value="0.05" min="0" max="1" step="0.01" id="delayTimeControl" />
+
+    <label for="feedbackControl">Feedback</label>
+    <input type="number" value="0.75" min="0" max="1" step="0.1" id="feedbackControl" />
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            bufferSource = io.context.createBufferSource(),
+            scope = new Oscilloscope( 'canvas', io ),
+            bufferLoader = function( uri ) {
+                return new Promise( function( resolve, reject ) {
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open( 'GET', uri );
+
+                    xhr.responseType = 'arraybuffer';
+
+                    xhr.onload = function() {
+                        if( xhr.status === 200 ) {
+                            // Do the decode dance
+                            io.context.decodeAudioData(
+                                xhr.response,
+                                function(buffer) {
+                                    resolve( buffer );
+                                },
+                                function( e ) {
+                                    reject( e );
+                                }
+                            );
+                        }
+                        else {
+                            reject( Error( 'Status !== 200' ) );
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        reject( Error( 'Network error' ) );
+                    };
+                    xhr.send();
+                } );
+            };
+
+
+        var schroederAllPass = io.createSchroederAllPass(),
+            feedbackControl = io.createConstant( 0.75 ),
+            delayTimeControl = io.createConstant( 0.05 );
+
+        feedbackControl.connect( schroederAllPass.controls.feedback );
+        delayTimeControl.connect( schroederAllPass.controls.delayTime );
+
+
+        output.gain.value = 0.1;
+
+
+        schroederAllPass.connect( output );
+        schroederAllPass.connect( scope.analyser );
+        output.connect( io.master );
+        scope.start( 0 );
+
+       bufferLoader( '../B185.wav' ).then( function( buffer ) {
+            bufferSource.buffer = buffer;
+            bufferSource.loop = true;
+            bufferSource.playbackRate.value = 1;
+            bufferSource.connect( schroederAllPass );
+            bufferSource.start( 0 );
+        }, function( err ) {
+            console.log( err );
+        } );
+
+        document.querySelector( '#feedbackControl' ).addEventListener( 'input', function( e ) {
+            feedbackControl.value = +e.target.value;
+        } );
+
+        document.querySelector( '#delayTimeControl' ).addEventListener( 'input', function( e ) {
+            delayTimeControl.value = +e.target.value;
+        } );
+    </script>
+</body>
+</html>

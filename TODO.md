@@ -1,6 +1,31 @@
 AudioIO Todo List
 =================
 
+
+
+New Additions
+-------------
+* Add `chain` and `fan` connection methods to all nodes.
+* BrownNoise buffer, and adding BrownNoise buffer to NoiseOscillator.
+* Seeded random
+* Remaining logical operators (NAND, NOR, XOR, NXOR)
+* FilterBank (xfade), with HP, BP, LP, Notch to fade between.
+* Chorus
+* Flanger
+* Phaser
+* BufferLoader
+* Multi-waveform LFO, inc. jitter
+* Env Follower (see tests/node-sketches/average.html)
+* Convolver / ImpulseReverb
+* ImpulseGenerator
+* SampleGenerator (to be used by GeneratorPlayer)
+* More envelope templates (D, AD, ADBDSR, DR, SR)
+* Xfading OscillatorBank with both FM and PM.
+* ~~Implementation of Schroeder's AllPass graph (fig2: http://www.ece.rochester.edu/~zduan/teaching/ece472/reading/Schroeder_1962.pdf)~~
+
+
+
+
 Refactoring
 -----------
 
@@ -109,23 +134,3 @@ Refactoring
 	* **tests/**
 		* **jasmine/**
 		* **visual-tests/**
-
-
-New Additions
--------------
-* Add `chain` and `fan` connection methods to all nodes.
-* BrownNoise buffer, and adding BrownNoise buffer to NoiseOscillator.
-* Seeded random
-* Remaining logical operators (NAND, NOR, XOR, NXOR)
-* FilterBank (xfade), with HP, BP, LP, Notch to fade between.
-* Chorus
-* Flanger
-* Phaser
-* BufferLoader
-* Multi-waveform LFO, inc. jitter
-* Env Follower (see tests/node-sketches/average.html)
-* Convolver / ImpulseReverb
-* ImpulseGenerator
-* SampleGenerator (to be used by GeneratorPlayer)
-* More envelope templates (D, AD, ADBDSR, DR, SR)
-* Xfading OscillatorBankwith both FM and PM.
