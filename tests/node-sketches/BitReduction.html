@@ -1,0 +1,38 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas id="one"></canvas>
+
+    <input type="number" value="0" min="0" max="32" step="1" id="bitDepth" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( '#one', io ),
+            bitReduction = io.createBitReduction(),
+            bitDepth = io.createConstant( 1 ),
+            osc = io.context.createOscillator();
+
+        osc.frequency.value = 220;
+
+        output.gain.value = 0.1;
+
+        osc.connect( bitReduction );
+        bitReduction.connect( output );
+        bitReduction.connect( scope.analyser );
+        output.connect( io.master );
+        scope.start();
+        osc.start();
+
+        document.querySelector( '#bitDepth' ).addEventListener( 'input', function( e ) {
+            bitDepth.value = +e.target.value;
+        }, false );
+
+    </script>
+</body>
+</html>

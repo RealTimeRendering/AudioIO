@@ -179,7 +179,7 @@ Object.defineProperty( signalCurves, 'Sine', {
             sin = Math.sin;
 
         for ( let i = 0, x; i < resolution; ++i ) {
-            x = ( i / resolution ) * 2 - 1;
+            x = ( i / resolution ) * (Math.PI * 2) - Math.PI;
             curve[ i ] = sin( x );
         }
 
@@ -212,6 +212,22 @@ Object.defineProperty( signalCurves, 'Round', {
 
 
             curve[ i ] = x;
+        }
+
+        return curve;
+    }() )
+} );
+
+Object.defineProperty( signalCurves, 'Sign', {
+    writable: false,
+    enumerable: true,
+    value: ( function() {
+        let resolution = CONFIG.curveResolution * 2,
+            curve = new Float32Array( resolution );
+
+        for ( let i = 0, x; i < resolution; ++i ) {
+            x = ( i / resolution ) * 2 - 1;
+            curve[ i ] = Math.sign( x );
         }
 
         return curve;
@@ -294,22 +310,6 @@ Object.defineProperty( signalCurves, 'PinkNoise', {
     }() )
 } );
 
-
-Object.defineProperty( signalCurves, 'Sign', {
-    writable: false,
-    enumerable: true,
-    value: ( function() {
-        let resolution = CONFIG.curveResolution * 2,
-            curve = new Float32Array( resolution );
-
-        for ( let i = 0, x; i < resolution; ++i ) {
-            x = ( i / resolution ) * 2 - 1;
-            curve[ i ] = Math.sign( x );
-        }
-
-        return curve;
-    }() )
-} );
 
 
 module.exports = signalCurves;

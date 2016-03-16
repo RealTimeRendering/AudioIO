@@ -25,8 +25,8 @@ class OR extends LogicalOperator {
     }
 }
 
-export default OR;
-
 AudioIO.prototype.createOR = function() {
     return new OR( this );
 };
+
+export default OR;

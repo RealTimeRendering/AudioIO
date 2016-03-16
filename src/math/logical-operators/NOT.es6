@@ -26,8 +26,8 @@ class NOT extends LogicalOperator {
     }
 }
 
-export default NOT;
-
 AudioIO.prototype.createNOT = function() {
     return new NOT( this );
 };
+
+export default NOT;

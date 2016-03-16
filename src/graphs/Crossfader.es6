@@ -48,3 +48,5 @@ class Crossfader extends Node {
 AudioIO.prototype.createCrossfader = function( numCases, startingCase ) {
     return new Crossfader( this, numCases, startingCase );
 };
+
+export default Crossfader;

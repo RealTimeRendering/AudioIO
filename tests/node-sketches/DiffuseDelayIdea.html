@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <label for="rotation">Stereo Rotation (deg, -90 to +90)</label>
+    <input type="number" value="0" min="-90" max="90" step="1" id="rotation" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            bufferSource = io.context.createBufferSource(),
+            scope = new Oscilloscope( 'canvas', io ),
+            bufferLoader = function( uri ) {
+                return new Promise( function( resolve, reject ) {
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open( 'GET', uri );
+
+                    xhr.responseType = 'arraybuffer';
+
+                    xhr.onload = function() {
+                        if( xhr.status === 200 ) {
+                            // Do the decode dance
+                            io.context.decodeAudioData(
+                                xhr.response,
+                                function(buffer) {
+                                    resolve( buffer );
+                                },
+                                function( e ) {
+                                    reject( e );
+                                }
+                            );
+                        }
+                        else {
+                            reject( Error( 'Status !== 200' ) );
+                        }
+                    };
+
+                    xhr.onerror = function() {
+                        reject( Error( 'Network error' ) );
+                    };
+                    xhr.send();
+                } );
+            },
+            delays = [],
+            numDelays = 8,
+            feedback = 0.4,
+            initialTime = 50,
+            rev = -3 * initialTime / Math.log10( feedback ),
+            lfo = io.context.createOscillator(),
+            lfoGain = io.context.createGain();
+
+        lfo.frequency.value = 2;
+        lfoGain.gain.value = 0.0005;
+        lfo.connect( lfoGain );
+        lfo.start();
+
+
+        for( var i = 0; i < numDelays; ++i ) {
+            var dt = (initialTime / Math.pow( 2, i / numDelays ));
+            var g = Math.pow( 10, -( ( 3 * dt ) / rev ) );
+
+            // var dt = initialTime - (i * 2 * Math.random()),
+                // g = feedback * (((numDelays-i)) * 0.1);
+
+            delays[ i ] = io.context.createDelay();
+            delays[ i ].delayTime.value = dt / 1000;
+            // lfoGain.connect( delays[ i ].delayTime );
+
+            var feedbackNode = io.context.createGain();
+            feedbackNode.gain.value = g;
+            delays[ i ].connect( feedbackNode );
+            feedbackNode.connect( delays[ i ] );
+
+
+            if( i > 0 ) {
+                delays[ i - 1 ].connect( delays[ i ] );
+            }
+
+            console.log( dt, g );
+
+            // if( i === numDelays - 1 ) {
+                delays[ i ].connect( output );
+            // }
+        }
+
+        output.gain.value = 0.01;
+
+        output.connect( io.master );
+        scope.start( 0 );
+
+       bufferLoader( 'K01-BrsSnrOff-07.wav' ).then( function( buffer ) {
+            bufferSource.buffer = buffer;
+            bufferSource.loop = true;
+            bufferSource.playbackRate.value = 1;
+            console.log( bufferSource );
+            bufferSource.connect( delays[ 0 ] );
+            bufferSource.connect( output );
+            bufferSource.start( 0 );
+        }, function( err ) {
+            console.log( err );
+        } );
+    </script>
+</body>
+</html>

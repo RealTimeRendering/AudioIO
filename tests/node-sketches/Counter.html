@@ -16,23 +16,17 @@
         var io = new AudioIO(),
             output = io.context.createGain(),
             scope = new Oscilloscope( '#one', io ),
-            counter = io.createCounter( 0.1, 1 ),
-            osc = io.context.createOscillator(),
-            multiply = io.createMultiply();
+            counter = io.createCounter( (1/io.context.sampleRate) * 100, 1 );
 
-        osc.frequency.value = 220;
+        // output.gain.value = 0.1;
 
-        output.gain.value = 0.1;
+        counter.connect( scope.analyser );
 
-        osc.connect( multiply, 0, 0 );
-        counter.connect( multiply, 0, 1 );
-
-        multiply.connect( scope.analyser );
-
-        multiply.connect( output );
-        output.connect( io.master );
+        // multiply.connect( output );
+        // output.connect( io.master );
         scope.start();
-        osc.start();
+        counter.start();
+        // osc.start();
 
         document.querySelector( '#value' ).addEventListener( 'input', function( e ) {
             var val = +e.target.value;

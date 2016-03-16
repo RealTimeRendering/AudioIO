@@ -8,6 +8,12 @@
     <label for="phase">Phase offset</label>
     <input type="number" value="0" min="0" max="1" step="0.01" id="phase" />
 
+    <label for="phase">SineShaper Drive</label>
+    <input type="number" value="0" min="0" max="5" step="0.01" id="sineShaperDrive" />
+
+    <label for="phase">SineShaper Dry/Wet</label>
+    <input type="number" value="0" min="0" max="1" step="0.01" id="sineShaperDryWet" />
+
     <script type="text/javascript" src="../../build/AudioIO.js"></script>
     <script type="text/javascript" src="Oscilloscope.js"></script>
 
@@ -26,7 +32,11 @@
             counter = io.createCounter( 0.001, 5 ),
             noiseOsc = io.createNoiseOscillator(),
             phaseOffset = io.createPhaseOffset(),
-            phaseOsc = io.context.createOscillator();
+            phaseOsc = io.context.createOscillator(),
+
+            sineShaper = io.createSineShaper(),
+            sineShaperDrive = io.createConstant( 1 ),
+            sineShaperDryWet = io.createConstant( 1 );
 
         // phaseOsc.frequency.value = 880;
         // phaseOsc.start();
@@ -51,20 +61,15 @@
 
         counter.connect( xfader.controls.index );
         xfader.connect( phaseOffset );
-        // controller.connect( phaseOffset.controls.phase );
+        controller.connect( phaseOffset.controls.phase );
         frequency.connect( phaseOffset.controls.frequency );
-        phaseOffset.connect( scope.analyser );
-        phaseOffset.connect( output );
 
-        // Take the output of the crossfader,
-        // multiply it by 4, and tell the result
-        // to modulate the phase offset.
-        var multiply = io.createMultiply(),
-            multiplicand  = io.createConstant( 4 );
+        sineShaperDrive.connect( sineShaper.controls.drive );
+        sineShaperDryWet.connect( sineShaper.controls.dryWet );
+        phaseOffset.connect( sineShaper );
+        sineShaper.connect( output );
 
-        multiplicand.connect( multiply, 0, 1 );
-        xfader.connect( multiply );
-        // multiply.connect( phaseOffset.controls.phase );
+        sineShaper.connect( scope.analyser );
 
         osc1.start();
         osc2.start();
@@ -81,6 +86,14 @@
 
         document.querySelector( '#phase' ).addEventListener( 'input', function( e ) {
             controller.value = +e.target.value;
+        } );
+
+        document.querySelector( '#sineShaperDrive' ).addEventListener( 'input', function( e ) {
+            sineShaperDrive.value = +e.target.value;
+        } );
+
+        document.querySelector( '#sineShaperDryWet' ).addEventListener( 'input', function( e ) {
+            sineShaperDryWet.value = +e.target.value;
         } );
 
     </script>

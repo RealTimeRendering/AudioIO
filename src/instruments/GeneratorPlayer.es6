@@ -59,7 +59,7 @@ class GeneratorPlayer extends Node {
 
         this.waveform = options.waveform || 'sine';
 
-        this.envelope = options.envelope || this.io.createASDREnvelope();
+        this.envelope = options.envelope || this.io.createADSREnvelope();
 
         this.activeGeneratorObjects = {};
         this.activeGeneratorObjectsFlat = [];

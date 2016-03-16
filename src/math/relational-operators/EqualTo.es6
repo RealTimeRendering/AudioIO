@@ -32,7 +32,6 @@ class EqualTo extends Node {
         this.controls.value = graph.value;
 
         this.setGraph( graph );
-
     }
 
     get value() {

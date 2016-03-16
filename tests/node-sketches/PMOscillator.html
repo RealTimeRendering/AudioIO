@@ -1,0 +1,68 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+
+    <input type="number" value="0" min="0" max="3" step="1" id="waveform" />
+
+    <input type="number" value="1" min="0.0" max="22000" step="10" id="phaseOffsetOscFrequency" />
+    <input type="number" value="220" min="1" max="22000" step="1" id="freq" />
+
+    <script type="text/javascript" src="../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            scope = new Oscilloscope( 'canvas', io ),
+            osc = io.createOscillatorBank(),
+            freq = io.createConstant( 220 ),
+            phaseOffsetOscFrequency = io.createConstant( 1 ),
+            phaseOffset = io.createPhaseOffset(),
+            phaseOffsetOsc = io.context.createOscillator(),
+            selector = io.createConstant( 0 );
+
+
+        osc.connect( phaseOffset );
+        freq.connect( phaseOffset.controls.frequency );
+        freq.connect( osc.controls.frequency );
+        phaseOffsetOsc.connect( phaseOffset.controls.phase );
+        phaseOffsetOsc.frequency.value = 0;
+        phaseOffsetOscFrequency.connect( phaseOffsetOsc.frequency );
+        phaseOffsetOsc.start();
+        selector.connect( osc.controls.waveform );
+
+
+
+        // osc.type = 'square';
+        // osc.frequency.value = 0;
+        output.gain.value = 0.1;
+
+        phaseOffset.connect( scope.analyser );
+        phaseOffset.connect( output );
+        output.connect( io.master );
+        scope.start();
+
+        document.querySelector( '#waveform' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            console.log( val );
+            selector.value = val;
+        } );
+
+
+        document.querySelector( '#phaseOffsetOscFrequency' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            phaseOffsetOscFrequency.value = val;
+        } );
+
+        document.querySelector( '#freq' ).addEventListener( 'input', function( e ) {
+            var val = +e.target.value;
+            freq.value = val;
+        } );
+
+    </script>
+</body>
+</html>

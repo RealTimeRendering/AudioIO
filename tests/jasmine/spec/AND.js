@@ -97,7 +97,7 @@ describe( "Math / AND", function() {
                     b = io.createConstant( bValue ),
                     node = io.createAND( aValue );
 
-                // a.connect( node, 0, 0 );
+                a.connect( node, 0, 0 );
                 b.connect( node, 0, 1 );
                 node.connect( io.master );
             },

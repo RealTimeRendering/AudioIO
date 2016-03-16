@@ -5,6 +5,10 @@ import cleaners from "../mixins/cleaners.es6";
 
 var graphs = new WeakMap();
 
+// TODO:
+//  - Possibly remove the need for only GainNodes
+//    as inputs/outputs? It'll allow for subclasses
+//    of Node to be more efficient...
 class Node {
     constructor( io, numInputs = 0, numOutputs = 0 ) {
         this._setIO( io );
