@@ -55,9 +55,6 @@ Refactoring
 			* overrides
 			* config
 
-		* **banks/**
-			* FilterBank
-
 		* **buffers/**
 			* Sine
 			* Triangle
@@ -76,7 +73,7 @@ Refactoring
 				* 4-band, 8-band, Custom.
 
 			* **filter/**
-				* Filter (generic), CombFilter, ...
+				* FilterBank, Filter (generic), CombFilter, ...
 
 			* **phase/**
 				* Phaser, Flanger, Chorus
@@ -102,6 +99,7 @@ Refactoring
 			* Crossfader
 			* PhaseOffset
 			* StereoWidth
+			* StereoRotation
 
 		* **oscillators/**
 			* OscillatorBank
