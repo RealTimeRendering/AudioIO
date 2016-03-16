@@ -17,7 +17,7 @@
         var io = new AudioIO(),
             spectrumAnalyser = new SpectrumAnalyser( '#one', io ),
             scope = new Oscilloscope( '#two', io ),
-            osc = io.createNoiseOscillator(),
+            osc = io.createNoiseOscillatorBank(),
             output = io.context.createGain(),
             type = io.createConstant( 0 );
 

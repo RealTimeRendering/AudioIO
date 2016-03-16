@@ -5,7 +5,7 @@ import math from "../mixins/math.es6";
 
 var BUFFERS = new WeakMap();
 
-class NoiseOscillator extends Node {
+class NoiseOscillatorBank extends Node {
     /**
      * @param {Object} io Instance of AudioIO.
      */
@@ -22,7 +22,7 @@ class NoiseOscillator extends Node {
         graph.crossfader = this.io.createCrossfader( Object.keys( types ).length, 0 );
         graph.outputGain.gain.value = 0;
 
-        for( var i = 0; i < typeKeys.length; ++i ) {
+        for ( var i = 0; i < typeKeys.length; ++i ) {
             var source = this.context.createBufferSource(),
                 buffer = buffers[ typeKeys[ i ] ];
 
@@ -47,7 +47,7 @@ class NoiseOscillator extends Node {
             channel = buffer.getChannelData( 0 ),
             fn;
 
-        switch( type ) {
+        switch ( type ) {
             case 'WHITE':
                 fn = Math.random;
                 break;
@@ -62,7 +62,7 @@ class NoiseOscillator extends Node {
                 break;
         }
 
-        for( var i = 0; i < sampleRate; ++i ) {
+        for ( var i = 0; i < sampleRate; ++i ) {
             channel[ i ] = fn() * 2 - 1;
         }
 
@@ -79,11 +79,11 @@ class NoiseOscillator extends Node {
             buffer;
 
         // Buffers already created. Stop here.
-        if( keys.length !== 0 ) {
+        if ( keys.length !== 0 ) {
             return;
         }
 
-        for( var i = 0; i < typeKeys.length; ++i ) {
+        for ( var i = 0; i < typeKeys.length; ++i ) {
             buffers[ typeKeys[ i ] ] = this._createSingleBuffer( typeKeys[ i ] );
         }
 
@@ -93,7 +93,7 @@ class NoiseOscillator extends Node {
     _getBuffers() {
         var buffers = BUFFERS.get( this.io );
 
-        if( buffers === undefined ) {
+        if ( buffers === undefined ) {
             this._createBuffers();
             buffers = BUFFERS.get( this.io );
         }
@@ -125,13 +125,13 @@ class NoiseOscillator extends Node {
 }
 
 
-NoiseOscillator.types = {
+NoiseOscillatorBank.types = {
     WHITE: 0,
     GAUSSIAN_WHITE: 1,
     PINK: 2
 };
 
 
-AudioIO.prototype.createNoiseOscillator = function() {
-    return new NoiseOscillator( this );
+AudioIO.prototype.createNoiseOscillatorBank = function() {
+    return new NoiseOscillatorBank( this );
 };

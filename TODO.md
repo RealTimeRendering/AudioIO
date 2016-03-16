@@ -5,7 +5,7 @@ AudioIO Todo List
 
 New Additions
 -------------
-* Add `chain` and `fan` connection methods to all nodes.
+* ~~Add `chain` and `fan` connection methods to all nodes.~~
 * BrownNoise buffer, and adding BrownNoise buffer to NoiseOscillator.
 * Seeded random
 * ~~Remaining logical operators (NAND, NOR, XOR, NXOR)~~
@@ -41,7 +41,8 @@ Refactoring
 
 * ~~Add `start` and `stop` controls to OscillatorBank, to mimic NoiseOscillator.~~
 
-* ~~Consider making *Bank classes sub-class Crossfader.~~ Not doing this. Duplication of control parameters.
+* ~~Consider making *Bank classes sub-class Crossfader.~~ 
+	* Not doing this. Duplication of control parameters.
 
 * ~~Ensure graph objects themselves are removed during `cleanUp` operations, and not just the graph's keys.~~
 

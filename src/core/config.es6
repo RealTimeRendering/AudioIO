@@ -1,5 +1,6 @@
 export default {
     curveResolution: 4096, // Must be an even number.
+    defaultBufferSize: 8,
 
     // Used when converting note strings (eg. 'A#4') to MIDI values.
     // It's the octave number of the lowest C note (MIDI note 0).
