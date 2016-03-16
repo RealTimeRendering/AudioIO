@@ -6,6 +6,6 @@ Utils.isTypedArray = function( array ) {
 	}
 
 	return false;
-}
+};
 
 export default Utils;

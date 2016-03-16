@@ -22,7 +22,7 @@ function Oscilloscope( element, io, width, height, fftSize ) {
     // Set context styles, inc. lineWidth based on pixel-ratio.
     this.ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';
     this.ctx.lineWidth = window.devicePixelRatio * 0.5;
-    this.ctx.fillStyle = 'rgba( 50, 50, 50, 0.2 )';
+    this.ctx.fillStyle = 'rgba( 50, 50, 50, 0.5 )';
 
     // Set a minimum threshold by which the zero crossing
     // will be found.

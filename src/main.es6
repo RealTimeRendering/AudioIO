@@ -89,11 +89,14 @@ import './graphs/DryWetNode.es6';
 import './graphs/PhaseOffset.es6';
 import './graphs/Crossfader.es6';
 
-// Oscillators
+// Oscillators: Using WebAudio oscillators
 import './oscillators/OscillatorBank.es6';
 import './oscillators/NoiseOscillatorBank.es6';
 import './oscillators/FMOscillator.es6';
 import './oscillators/SineBank.es6';
+
+// Oscillators: Buffer-based
+import './oscillators/BufferOscillator.es6';
 
 // import './graphs/Sketch.es6';
 
