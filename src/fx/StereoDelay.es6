@@ -41,8 +41,6 @@ class StereoDelay extends DryWetNode {
         this.delayR.connect( this.merger, 0, 1 );
         this.merger.connect( this.outputs[ 0 ] );
     }
-
-
 }
 
 AudioIO.prototype.createStereoDelay = function() {

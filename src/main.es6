@@ -79,7 +79,6 @@ import './envelopes/ADEnvelope.es6';
 import './envelopes/ADBDSREnvelope.es6';
 
 import './graphs/EQShelf.es6';
-// import './graphs/DiffuseDelay.es6';
 import './graphs/Counter.es6';
 import './graphs/DryWetNode.es6';
 import './graphs/PhaseOffset.es6';

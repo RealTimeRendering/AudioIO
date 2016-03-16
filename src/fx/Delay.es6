@@ -31,8 +31,6 @@ class Delay extends DryWetNode {
         this.controls.time.connect( this.delay.delayTime );
         this.controls.feedback.connect( this.feedback.gain );
     }
-
-
 }
 
 AudioIO.prototype.createDelay = function( time, feedbackLevel ) {
