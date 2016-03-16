@@ -5,7 +5,7 @@ AudioIO Todo List
 
 New Additions
 -------------
-* Add `chain` and `fan` connection methods to all nodes.
+* ~~Add `chain` and `fan` connection methods to all nodes.~~
 * BrownNoise buffer, and adding BrownNoise buffer to NoiseOscillator.
 * Seeded random
 * ~~Remaining logical operators (NAND, NOR, XOR, NXOR)~~
