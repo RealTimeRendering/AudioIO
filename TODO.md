@@ -8,8 +8,8 @@ New Additions
 * Add `chain` and `fan` connection methods to all nodes.
 * BrownNoise buffer, and adding BrownNoise buffer to NoiseOscillator.
 * Seeded random
-* Remaining logical operators (NAND, NOR, XOR, NXOR)
-* FilterBank (xfade), with HP, BP, LP, Notch to fade between.
+* ~~Remaining logical operators (NAND, NOR, XOR, NXOR)~~
+* ~~FilterBank (xfade), with HP, BP, LP, Notch to fade between.~~
 * Chorus
 * Flanger
 * Phaser
