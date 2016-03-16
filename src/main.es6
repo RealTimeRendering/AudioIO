@@ -75,6 +75,8 @@ import './math/SampleDelay.es6';
 
 import './envelopes/CustomEnvelope.es6';
 import './envelopes/ADSREnvelope.es6';
+import './envelopes/ADEnvelope.es6';
+import './envelopes/ADBDSREnvelope.es6';
 
 import './graphs/EQShelf.es6';
 // import './graphs/DiffuseDelay.es6';

@@ -19,7 +19,7 @@ New Additions
 * Convolver / ImpulseReverb
 * ImpulseGenerator
 * SampleGenerator (to be used by GeneratorPlayer)
-* More envelope templates (D, AD, ADBDSR, DR, SR)
+* ~~More envelope templates (AD, ADBDSR)~~
 * Xfading OscillatorBank with both FM and PM.
 * ~~Implementation of Schroeder's AllPass graph (fig2: http://www.ece.rochester.edu/~zduan/teaching/ece472/reading/Schroeder_1962.pdf)~~
 
