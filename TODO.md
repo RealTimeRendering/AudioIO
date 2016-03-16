@@ -66,7 +66,7 @@ Refactoring
 
 		* **envelopes/**
 			* CustomEnvelope
-			* DEnvelope, ADEnvelope, DREnvelope, SREnvelope, ASDREnvelope, ADBDSREnvelope
+			* DEnvelope, ADEnvelope, DREnvelope, SREnvelope, ADSREnvelope, ADBDSREnvelope
 
 		* **fx/**
 			* **delay/**

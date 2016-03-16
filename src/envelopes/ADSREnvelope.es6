@@ -1,7 +1,7 @@
 import "../core/AudioIO.es6";
 import CustomEnvelope from "./CustomEnvelope.es6";
 
-class ASDREnvelope extends CustomEnvelope {
+class ADSREnvelope extends CustomEnvelope {
     constructor( io ) {
         super( io );
 
@@ -102,8 +102,8 @@ class ASDREnvelope extends CustomEnvelope {
     }
 }
 
-AudioIO.prototype.createASDREnvelope = function() {
-    return new ASDREnvelope( this );
+AudioIO.prototype.createADSREnvelope = function() {
+    return new ADSREnvelope( this );
 };
 
-export default ASDREnvelope;
+export default ADSREnvelope;

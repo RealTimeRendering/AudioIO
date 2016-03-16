@@ -74,7 +74,7 @@ import './math/Lerp.es6';
 import './math/SampleDelay.es6';
 
 import './envelopes/CustomEnvelope.es6';
-import './envelopes/ASDREnvelope.es6';
+import './envelopes/ADSREnvelope.es6';
 
 import './graphs/EQShelf.es6';
 // import './graphs/DiffuseDelay.es6';
