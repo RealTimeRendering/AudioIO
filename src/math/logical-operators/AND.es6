@@ -24,8 +24,8 @@ class AND extends LogicalOperator {
     }
 }
 
-export default AND;
-
 AudioIO.prototype.createAND = function() {
     return new AND( this );
 };
+
+export default AND;

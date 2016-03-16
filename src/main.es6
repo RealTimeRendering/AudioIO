@@ -44,6 +44,9 @@ import './math/logical-operators/LogicalOperator.es6';
 import './math/logical-operators/AND.es6';
 import './math/logical-operators/OR.es6';
 import './math/logical-operators/NOT.es6';
+import './math/logical-operators/NAND.es6';
+import './math/logical-operators/NOR.es6';
+import './math/logical-operators/XOR.es6';
 
 import './math/Abs.es6';
 import './math/Add.es6';

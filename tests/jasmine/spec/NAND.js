@@ -1,5 +1,5 @@
-describe( "Math / AND", function() {
-    var node = io.createAND();
+describe( "Math / NAND", function() {
+    var node = io.createNAND();
 
 
     it( 'should have a context', function() {
@@ -19,8 +19,8 @@ describe( "Math / AND", function() {
     } );
 
 
-    it( 'should have a cleanUp method and mark items fAND GC.', function() {
-        var n = io.createAND( 100 );
+    it( 'should have a cleanUp method Nand mark items for GC.', function() {
+        var n = io.createNAND();
         expect( n.cleanUp ).toEqual( jasmine.any( Function ) );
 
         n.cleanUp();
@@ -30,7 +30,7 @@ describe( "Math / AND", function() {
     } );
 
 
-    it( 'should have one input and one output', function() {
+    it( 'should have two inputs and one output', function() {
         expect( node.inputs ).toBeDefined();
         expect( node.outputs ).toBeDefined();
 
@@ -41,7 +41,7 @@ describe( "Math / AND", function() {
         expect( node.outputs.length ).toEqual( 1 );
     } );
 
-    it( 'should emulate AND (|) operation (1)', function( done ) {
+    it( 'should emulate NAND (!&) operation (1)', function( done ) {
         var aValue = 0,
             bValue = 0;
 
@@ -49,14 +49,14 @@ describe( "Math / AND", function() {
             onSetup: function( io ) {
                 var a = io.createConstant( aValue ),
                     b = io.createConstant( bValue ),
-                    node = io.createAND();
+                    node = io.createNAND();
 
                 a.connect( node, 0, 0 );
                 b.connect( node, 0, 1 );
                 node.connect( io.master );
             },
             onCompare: function( value ) {
-                expect( value ).toEqual( ( aValue & bValue ) );
+                expect( value ).toEqual( Number( !( aValue & bValue ) ) );
             },
             onComplete: function() {
                 done();
@@ -64,7 +64,7 @@ describe( "Math / AND", function() {
         } );
     } );
 
-    it( 'should emulate AND (|) operation (2)', function( done ) {
+    it( 'should emulate NAND (!&) operation (2)', function( done ) {
         var aValue = 0,
             bValue = 1;
 
@@ -72,14 +72,14 @@ describe( "Math / AND", function() {
             onSetup: function( io ) {
                 var a = io.createConstant( aValue ),
                     b = io.createConstant( bValue ),
-                    node = io.createAND();
+                    node = io.createNAND();
 
                 a.connect( node, 0, 0 );
                 b.connect( node, 0, 1 );
                 node.connect( io.master );
             },
             onCompare: function( value ) {
-                expect( value ).toEqual( aValue & bValue );
+                expect( value ).toEqual( Number( !( aValue & bValue ) ) );
             },
             onComplete: function() {
                 done();
@@ -87,7 +87,7 @@ describe( "Math / AND", function() {
         } );
     } );
 
-    it( 'should emulate AND (|) operation (3)', function( done ) {
+    it( 'should emulate NAND (!&) operation (3)', function( done ) {
         var aValue = 1,
             bValue = 0;
 
@@ -95,14 +95,14 @@ describe( "Math / AND", function() {
             onSetup: function( io ) {
                 var a = io.createConstant( aValue ),
                     b = io.createConstant( bValue ),
-                    node = io.createAND( aValue );
+                    node = io.createNAND( aValue );
 
                 a.connect( node, 0, 0 );
                 b.connect( node, 0, 1 );
                 node.connect( io.master );
             },
             onCompare: function( value ) {
-                expect( value ).toEqual( aValue & bValue );
+                expect( value ).toEqual( Number( !( aValue & bValue ) ) );
             },
             onComplete: function() {
                 done();
@@ -110,7 +110,7 @@ describe( "Math / AND", function() {
         } );
     } );
 
-    it( 'should emulate AND (|) operation (4)', function( done ) {
+    it( 'should emulate NAND (!&) operation (4)', function( done ) {
         var aValue = 1,
             bValue = 1;
 
@@ -118,20 +118,18 @@ describe( "Math / AND", function() {
             onSetup: function( io ) {
                 var a = io.createConstant( aValue ),
                     b = io.createConstant( bValue ),
-                    node = io.createAND();
+                    node = io.createNAND();
 
                 a.connect( node, 0, 0 );
                 b.connect( node, 0, 1 );
                 node.connect( io.master );
             },
             onCompare: function( value ) {
-                expect( value ).toEqual( aValue & bValue );
+                expect( value ).toEqual( Number( !( aValue & bValue ) ) );
             },
             onComplete: function() {
                 done();
             }
         } );
     } );
-
-
 } );
