@@ -39,10 +39,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values (1)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 0 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( 10 ),
-            wet = _io.createConstant( 0 );
+            wet = _io.createConstant( 0 ),
+            dryWetValue = _io.createConstant( 0 );
 
+        dryWetValue.connect( node.controls.dryWet );
         dry.connect( node.dry );
         wet.connect( node.wet );
         node.connect( _io.master );
@@ -63,10 +65,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values (2)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 1 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( 0 ),
-            wet = _io.createConstant( 20 );
+            wet = _io.createConstant( 20 ),
+            dryWetValue = _io.createConstant( 1 );
 
+        dryWetValue.connect( node.controls.dryWet );
         dry.connect( node.dry );
         wet.connect( node.wet );
         node.connect( _io.master );
@@ -87,10 +91,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values (3)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 0.5 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( 0 ),
-            wet = _io.createConstant( 4 );
+            wet = _io.createConstant( 4 ),
+            dryWetValue = _io.createConstant( 0.5 );
 
+        dryWetValue.connect( node.controls.dryWet );
         dry.connect( node.dry );
         wet.connect( node.wet );
         node.connect( _io.master );
@@ -111,10 +117,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values (4)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 0.5 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( 4 ),
-            wet = _io.createConstant( 0 );
+            wet = _io.createConstant( 0 ),
+            dryWetValue = _io.createConstant( 0.5 );
 
+        dryWetValue.connect( node.controls.dryWet );
         dry.connect( node.dry );
         wet.connect( node.wet );
         node.connect( _io.master );
@@ -137,10 +145,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values when negative (1)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 0.5 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( -4 ),
-            wet = _io.createConstant( 0 );
+            wet = _io.createConstant( 0 ),
+            dryWetValue = _io.createConstant( 0.5 );
 
+        dryWetValue.connect( node.controls.dryWet );
         dry.connect( node.dry );
         wet.connect( node.wet );
         node.connect( _io.master );
@@ -161,9 +171,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values when negative (2)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 0.5 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( -4 ),
-            wet = _io.createConstant( -4 );
+            wet = _io.createConstant( -4 ),
+            dryWetValue = _io.createConstant( 0.5 );
+
+        dryWetValue.connect( node.controls.dryWet );
 
         dry.connect( node.dry );
         wet.connect( node.wet );
@@ -185,10 +198,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values when negative (3)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 0.5 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( 0 ),
-            wet = _io.createConstant( -4 );
+            wet = _io.createConstant( -4 ),
+            dryWetValue = _io.createConstant( 0.5 );
 
+        dryWetValue.connect( node.controls.dryWet );
         dry.connect( node.dry );
         wet.connect( node.wet );
         node.connect( _io.master );
@@ -209,10 +224,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values when negative (4)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 0.5 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( 10 ),
-            wet = _io.createConstant( -10 );
+            wet = _io.createConstant( -10 ),
+            dryWetValue = _io.createConstant( 0.5 );
 
+        dryWetValue.connect( node.controls.dryWet );
         dry.connect( node.dry );
         wet.connect( node.wet );
         node.connect( _io.master );
@@ -233,10 +250,12 @@ describe( "DryWetNode", function() {
     it( 'should correctly crossfade between dry and wet values when negative (5)', function( done ) {
         var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
-        var node = _io.createDryWetNode( 0.5 ),
+        var node = _io.createDryWetNode(),
             dry = _io.createConstant( -10 ),
-            wet = _io.createConstant( 10 );
+            wet = _io.createConstant( 10 ),
+            dryWetValue = _io.createConstant( 0.5 );
 
+        dryWetValue.connect( node.controls.dryWet );
         dry.connect( node.dry );
         wet.connect( node.wet );
         node.connect( _io.master );
@@ -246,33 +265,6 @@ describe( "DryWetNode", function() {
 
             for ( var i = 0; i < buffer.length; i++ ) {
                 expect( buffer[ i ] ).toEqual( 0 );
-            }
-
-            done();
-        };
-
-        _io.context.startRendering();
-    } );
-
-
-    it( 'should allow crossfade value to be changed after creation', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
-
-        var node = _io.createDryWetNode( 0 ),
-            dry = _io.createConstant( 10 ),
-            wet = _io.createConstant( -10 );
-
-        dry.connect( node.dry );
-        wet.connect( node.wet );
-        node.connect( _io.master );
-
-        node.control.value = 1;
-
-        _io.context.oncomplete = function( e ) {
-            var buffer = e.renderedBuffer.getChannelData( 0 );
-
-            for ( var i = 0; i < buffer.length; i++ ) {
-                expect( buffer[ i ] ).toEqual( -10 );
             }
 
             done();
