@@ -41,7 +41,8 @@ Refactoring
 
 * ~~Add `start` and `stop` controls to OscillatorBank, to mimic NoiseOscillator.~~
 
-* ~~Consider making *Bank classes sub-class Crossfader.~~ Not doing this. Duplication of control parameters.
+* ~~Consider making *Bank classes sub-class Crossfader.~~ 
+	* Not doing this. Duplication of control parameters.
 
 * ~~Ensure graph objects themselves are removed during `cleanUp` operations, and not just the graph's keys.~~
 
