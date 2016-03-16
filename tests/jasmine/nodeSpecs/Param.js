@@ -42,7 +42,7 @@ describe( "Param", function() {
 
 
     it( 'should output value when value is passed', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) ),
             node,
             val = Math.random() * 20;
 
@@ -63,7 +63,7 @@ describe( "Param", function() {
     } );
 
     it( 'should output 0 if value is not passed', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) ),
             node;
 
         _node = _io.createParam();
@@ -83,7 +83,7 @@ describe( "Param", function() {
     } );
 
     it( 'should be controllable', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) ),
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) ),
             _node = _io.createParam(),
             control = _io.createConstant( 2 );
 

@@ -37,7 +37,7 @@ describe( "DryWetNode", function() {
 
 
     it( 'should correctly crossfade between dry and wet values (1)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0 ),
             dry = _io.createConstant( 10 ),
@@ -61,7 +61,7 @@ describe( "DryWetNode", function() {
     } );
 
     it( 'should correctly crossfade between dry and wet values (2)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 1 ),
             dry = _io.createConstant( 0 ),
@@ -85,7 +85,7 @@ describe( "DryWetNode", function() {
     } );
 
     it( 'should correctly crossfade between dry and wet values (3)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0.5 ),
             dry = _io.createConstant( 0 ),
@@ -109,7 +109,7 @@ describe( "DryWetNode", function() {
     } );
 
     it( 'should correctly crossfade between dry and wet values (4)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0.5 ),
             dry = _io.createConstant( 4 ),
@@ -135,7 +135,7 @@ describe( "DryWetNode", function() {
 
 
     it( 'should correctly crossfade between dry and wet values when negative (1)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0.5 ),
             dry = _io.createConstant( -4 ),
@@ -159,7 +159,7 @@ describe( "DryWetNode", function() {
     } );
 
     it( 'should correctly crossfade between dry and wet values when negative (2)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0.5 ),
             dry = _io.createConstant( -4 ),
@@ -183,7 +183,7 @@ describe( "DryWetNode", function() {
     } );
 
     it( 'should correctly crossfade between dry and wet values when negative (3)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0.5 ),
             dry = _io.createConstant( 0 ),
@@ -207,7 +207,7 @@ describe( "DryWetNode", function() {
     } );
 
     it( 'should correctly crossfade between dry and wet values when negative (4)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0.5 ),
             dry = _io.createConstant( 10 ),
@@ -231,7 +231,7 @@ describe( "DryWetNode", function() {
     } );
 
     it( 'should correctly crossfade between dry and wet values when negative (5)', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0.5 ),
             dry = _io.createConstant( -10 ),
@@ -256,7 +256,7 @@ describe( "DryWetNode", function() {
 
 
     it( 'should allow crossfade value to be changed after creation', function( done ) {
-        var _io = new AudioIO( new OfflineAudioContext( 1, 44100 * 0.01, 44100 ) );
+        var _io = new AudioIO( new OfflineAudioContext( 1, 5, 44100 ) );
 
         var node = _io.createDryWetNode( 0 ),
             dry = _io.createConstant( 10 ),

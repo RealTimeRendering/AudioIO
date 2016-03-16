@@ -1,3 +1,5 @@
+var slice = Array.prototype.slice;
+
 export default {
     connect: function( node, outputChannel = 0, inputChannel = 0 ) {
         if ( node instanceof AudioParam || node instanceof AudioNode ) {
@@ -36,6 +38,25 @@ export default {
                     n.disconnect();
                 }
             } );
+        }
+    },
+
+    chain: function() {
+        var nodes = slice.call( arguments ),
+            node = this;
+
+        for( var i = 0; i < nodes.length; ++i ) {
+            node.connect.call( node, nodes[ i ] );
+            node = nodes[ i ];
+        }
+    },
+
+    fan: function() {
+        var nodes = slice.call( arguments ),
+            node = this;
+
+        for( var i = 0; i < nodes.length; ++i ) {
+            node.connect.call( node, nodes[ i ] );
         }
     }
 };

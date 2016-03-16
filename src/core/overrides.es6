@@ -3,7 +3,8 @@
 // I don't like doing this, but s'gotta be done :(
 ( function() {
     var originalAudioNodeConnect = AudioNode.prototype.connect,
-        originalAudioNodeDisconnect = AudioNode.prototype.disconnect;
+        originalAudioNodeDisconnect = AudioNode.prototype.disconnect,
+        slice = Array.prototype.slice;
 
     AudioNode.prototype.connect = function( node, outputChannel = 0, inputChannel = 0 ) {
         if ( node.inputs ) {
@@ -43,4 +44,24 @@
             originalAudioNodeDisconnect.apply( this, arguments );
         }
     };
+
+    AudioNode.prototype.chain = function() {
+        var nodes = slice.call( arguments ),
+            node = this;
+
+        for( var i = 0; i < nodes.length; ++i ) {
+            node.connect.call( node, nodes[ i ] );
+            node = nodes[ i ];
+        }
+    };
+
+    AudioNode.prototype.fan = function() {
+        var nodes = slice.call( arguments ),
+            node = this;
+
+        for( var i = 0; i < nodes.length; ++i ) {
+            node.connect.call( node, nodes[ i ] );
+        }
+    };
+
 }() );
