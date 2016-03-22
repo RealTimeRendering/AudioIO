@@ -7,15 +7,19 @@ class SineShaper extends DryWetNode {
     constructor( io ) {
         super( io );
 
-        this.controls.drive = this.io.createParam();
-        this.shaper = this.io.createWaveShaper( this.io.curves.Sine );
-        this.shaperDrive = this.context.createGain();
-        this.shaperDrive.gain.value = 1;
+        var graph = this.getGraph();
 
-        this.inputs[ 0 ].connect( this.shaperDrive );
-        this.controls.drive.connect( this.shaperDrive.gain );
-        this.shaperDrive.connect( this.shaper );
-        this.shaper.connect( this.wet );
+        this.controls.drive = this.io.createParam();
+        graph.shaper = this.io.createWaveShaper( this.io.curves.Sine );
+        graph.shaperDrive = this.context.createGain();
+        graph.shaperDrive.gain.value = 1;
+
+        this.inputs[ 0 ].connect( graph.shaperDrive );
+        this.controls.drive.connect( graph.shaperDrive.gain );
+        graph.shaperDrive.connect( graph.shaper );
+        graph.shaper.connect( this.wet );
+
+        this.setGraph( graph );
     }
 }
 
