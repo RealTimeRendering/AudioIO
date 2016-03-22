@@ -1,5 +1,5 @@
-import AudioIO from "../core/AudioIO.es6";
-import Node from "../core/Node.es6";
+import AudioIO from "../../core/AudioIO.es6";
+import Node from "../../core/Node.es6";
 
 
 // Based on the following formula from Michael Gruhn:
@@ -10,10 +10,12 @@ import Node from "../core/Node.es6";
 // Calculate transformation matrix's coefficients
 // cos_coef = cos(angle);
 // sin_coef = sin(angle);
-
+//
 // Do this per sample
 // out_left = in_left * cos_coef - in_right * sin_coef;
 // out_right = in_left * sin_coef + in_right * cos_coef;
+// 
+// Rotation is in radians.
 class StereoRotation extends Node {
     constructor( io, rotation ) {
         super( io, 1, 1 );
@@ -48,7 +50,7 @@ class StereoRotation extends Node {
         graph.inputLeft.connect( graph.leftMultiplyCos, 0, 0 );
         graph.cos.connect( graph.leftMultiplyCos, 0, 1 );
         graph.inputLeft.connect( graph.leftMultiplySin, 0, 0 );
-        graph.sin.connect( graph.leftMultiplySin, 0, 1);
+        graph.sin.connect( graph.leftMultiplySin, 0, 1 );
 
         graph.inputRight.connect( graph.rightMultiplySin, 0, 0 );
         graph.sin.connect( graph.rightMultiplySin, 0, 1 );

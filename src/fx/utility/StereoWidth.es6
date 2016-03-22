@@ -1,5 +1,5 @@
-import AudioIO from "../core/AudioIO.es6";
-import Node from "../core/Node.es6";
+import AudioIO from "../../core/AudioIO.es6";
+import Node from "../../core/Node.es6";
 
 
 // Based on the following formula from Michael Gruhn:

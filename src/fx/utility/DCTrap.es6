@@ -39,8 +39,8 @@
 		`a = 0.00065448853615`.
  */
 
-import "../core/AudioIO.es6";
-import Node from "../core/Node.es6";
+import "../../core/AudioIO.es6";
+import Node from "../../core/Node.es6";
 
 class DCTrap extends Node {
     constructor( io, cutoff = 5 ) {

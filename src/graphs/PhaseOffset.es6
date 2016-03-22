@@ -20,7 +20,12 @@ class PhaseOffset extends Node {
         this.halfPhase.connect( this.multiply, 0, 1 );
         this.multiply.connect( this.delay.delayTime );
 
+        // Should this be connected!? If it is, then it's
+        // creating, eg. PWM if a square wave is inputted, 
+        // since raw input is being blended with phase-offsetted
+        // input.
         this.inputs[ 0 ].connect( this.outputs[ 0 ] );
+
         this.inputs[ 0 ].connect( this.delay );
         this.delay.connect( this.outputs[ 0 ] );
 

@@ -12,12 +12,10 @@ import './fx/delay/Delay.es6';
 import './fx/delay/PingPongDelay.es6';
 import './fx/delay/StereoDelay.es6';
 
-import './fx/SineShaper.es6';
-import './fx/StereoWidth.es6';
-import './fx/StereoRotation.es6';
+import './fx/eq/CustomEQ.es6';
+
 // import './fx/BitReduction.es6';
 import './fx/SchroederAllPass.es6';
-import './fx/DCTrap.es6';
 
 import './fx/filters/FilterBank.es6';
 import './fx/filters/LPFilter.es6';
@@ -26,7 +24,13 @@ import './fx/filters/HPFilter.es6';
 import './fx/filters/NotchFilter.es6';
 import './fx/filters/AllPassFilter.es6';
 
-import './fx/eq/CustomEQ.es6';
+import './fx/saturation/SineShaper.es6';
+
+import './fx/utility/DCTrap.es6';
+import './fx/utility/LFO.es6';
+import './fx/utility/StereoWidth.es6';
+import './fx/utility/StereoRotation.es6';
+
 
 // Generators and instruments.
 import './generators/OscillatorGenerator.es6';

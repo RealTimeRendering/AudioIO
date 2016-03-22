@@ -22,7 +22,7 @@ function createFilter( io, type ) {
     graph.setType = function( type ) {
         this.type = type;
 
-        switch( type ) {
+        switch ( type ) {
             case 'LP12':
                 this.filter.type = 'lowpass';
                 break;
@@ -35,8 +35,8 @@ function createFilter( io, type ) {
                 this.filter.type = 'highpass';
                 break;
 
-            // Fall through to handle those filter
-            // types with `gain` AudioParams.
+                // Fall through to handle those filter
+                // types with `gain` AudioParams.
             case 'lowshelf':
                 this.filter.type = 'lowshelf';
             case 'highshelf':
@@ -70,7 +70,7 @@ class CustomEQ extends Node {
         // If this is the first filter being added,
         // make sure input is connected and filter
         // is then connected to output.
-        if( filters.length === 0 ) {
+        if ( filters.length === 0 ) {
             this.inputs[ 0 ].disconnect( this.outputs[ 0 ] );
             this.inputs[ 0 ].connect( filterGraph.filter );
             filterGraph.filter.connect( this.outputs[ 0 ] );
@@ -85,6 +85,11 @@ class CustomEQ extends Node {
             filterGraph.filter.connect( this.outputs[ 0 ] );
         }
 
+        // Store the filter and save the new filters object
+        // (it needs to be saved in case this is the first
+        // filter being added, and very little overhead to
+        // calling `set` if it's not the first filter being
+        // added).
         filters.push( filterGraph );
         FILTER_STORE.set( this, filters );
 
@@ -110,7 +115,7 @@ class CustomEQ extends Node {
         var filters = FILTER_STORE.get( this );
 
 
-        if( !filters[ index ] ) {
+        if ( !filters[ index ] ) {
             console.warn( 'No filter at the given index:', index, filters );
             return false;
         }
@@ -122,20 +127,20 @@ class CustomEQ extends Node {
 
         // If all filters have been removed, connect the
         // input to the output so audio still passes through.
-        if( filters.length === 0 ) {
+        if ( filters.length === 0 ) {
             this.inputs[ 0 ].connect( this.outputs[ 0 ] );
         }
 
         // If the first filter has been removed, and there
         // are still filters in the array, connect the input
         // to the new first filter.
-        else if( index === 0 ) {
+        else if ( index === 0 ) {
             this.inputs[ 0 ].connect( filters[ 0 ].filter );
         }
 
         // If the last filter has been removed, the
         // new last filter must be connected to the output
-        else if( index === filters.length ) {
+        else if ( index === filters.length ) {
             filters[ filters.length - 1 ].filter.connect( this.outputs[ 0 ] );
         }
 
@@ -155,7 +160,7 @@ class CustomEQ extends Node {
     removeAllFilters() {
         var filters = FILTER_STORE.get( this );
 
-        for( var i = filters.length - 1; i >= 0; --i ) {
+        for ( var i = filters.length - 1; i >= 0; --i ) {
             this.removeFilterAtIndex( i );
         }
 
