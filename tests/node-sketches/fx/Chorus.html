@@ -1,0 +1,122 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <label for="dryWet">Dry/Wet</label>
+    <input type="number" value="1" min="0" max="1" step="0.1" id="dryWet" />
+    <br/>    
+
+    <label for="feedback">Feedback (-1 to +1)</label>
+    <input type="number" value="0" min="-1" max="1" step="0.1" id="feedback" />
+    <br/>
+
+    <label for="delay1Time">Delay 1 time (0ms to +10,s)</label>
+    <input type="number" value="0" min="0" max="10" step="0.1" id="delay1Time" />
+    <br/>
+
+    <label for="delay2Time">Delay 2 time (0ms to +10ms)</label>
+    <input type="number" value="0" min="0" max="10" step="0.1" id="delay2Time" />
+    <br/>
+
+    <label for="highpassFrequency">Delay 1 HP freq (0hz to +22050hz)</label>
+    <input type="number" value="0" min="0" max="22050" step="50" id="highpassFrequency" />
+    <br/>
+
+    <label for="modFrequency">Mod freq (0hz to +20hz)</label>
+    <input type="number" value="0" min="0" max="20" step="0.5" id="modFrequency" />
+    <br/>    
+
+    <label for="modAmount">Mod amount (0ms to 10ms)</label>
+    <input type="number" value="0" min="0" max="10" step="0.1" id="modAmount" />
+    <br/>    
+
+    <label for="modPhase">Mod phase for delay 2 (0 to 1)</label>
+    <input type="number" value="0" min="0" max="1" step="0.01" id="modPhase" />
+    <br/>    
+
+    <label for="delayBalance">Delay balance (0 = full delay1, 1 = full delay2)</label>
+    <input type="number" value="0" min="0" max="1" step="0.1" id="delayBalance" />
+    <br/>    
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            osc = io.context.createOscillator(),
+            chorus = io.createChorus(),
+            dryWet = io.createConstant( 1 ),
+            feedback = io.createConstant( 0 ),
+            delay1Time = io.createConstant( 0 ),
+            delay2Time = io.createConstant( 0 ),
+            highpassFrequency = io.createConstant( 0 ),
+            modFrequency = io.createConstant( 0 ),
+            modAmount = io.createConstant( 0 ),
+            modPhase = io.createConstant( 0 ),
+            delayBalance = io.createConstant( 0 ),
+            scope = new Oscilloscope( 'canvas', io );
+
+        output.gain.value = 0.01;
+        osc.type = 'sawtooth';
+
+        dryWet.connect( chorus.controls.dryWet );
+        feedback.connect( chorus.controls.feedback );
+        delay1Time.connect( chorus.controls.delay1Time );
+        delay2Time.connect( chorus.controls.delay2Time );
+        highpassFrequency.connect( chorus.controls.highpassFrequency );
+        modFrequency.connect( chorus.controls.modFrequency );
+        modAmount.connect( chorus.controls.modAmount );
+        modPhase.connect( chorus.controls.modPhase );
+        delayBalance.connect( chorus.controls.delayBalance );
+
+
+        osc.connect( chorus );
+        chorus.connect( scope.analyser );
+        chorus.connect( output );
+        output.connect( io.master );
+
+        scope.start( 0 );
+        osc.start();
+
+        document.querySelector( '#dryWet' ).addEventListener( 'input', function( e ) {
+            dryWet.value = +e.target.value;
+        } );
+
+        document.querySelector( '#feedback' ).addEventListener( 'input', function( e ) {
+            feedback.value = +e.target.value;
+        } );
+
+        document.querySelector( '#delay1Time' ).addEventListener( 'input', function( e ) {
+            delay1Time.value = +e.target.value / 1000;
+        } );
+
+        document.querySelector( '#delay2Time' ).addEventListener( 'input', function( e ) {
+            delay2Time.value = +e.target.value / 1000;
+        } );
+
+        document.querySelector( '#highpassFrequency' ).addEventListener( 'input', function( e ) {
+            highpassFrequency.value = +e.target.value;
+        } );
+
+        document.querySelector( '#modFrequency' ).addEventListener( 'input', function( e ) {
+            modFrequency.value = +e.target.value;
+        } );
+
+        document.querySelector( '#modAmount' ).addEventListener( 'input', function( e ) {
+            modAmount.value = +e.target.value / 1000;
+        } );
+
+        document.querySelector( '#modPhase' ).addEventListener( 'input', function( e ) {
+            modPhase.value = +e.target.value;
+        } );
+
+        document.querySelector( '#delayBalance' ).addEventListener( 'input', function( e ) {
+            delayBalance.value = +e.target.value;
+        } );
+    </script>
+</body>
+</html>

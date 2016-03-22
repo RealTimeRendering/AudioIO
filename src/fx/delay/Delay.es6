@@ -4,14 +4,14 @@ import DryWetNode from "../../graphs/DryWetNode.es6";
 // TODO: Add feedbackLevel and delayTime Param instances
 // to control this node.
 class Delay extends DryWetNode {
-    constructor( io, time = 0, feedbackLevel = 0 ) {
+    constructor( io ) {
         super( io, 1, 1 );
 
         var graph = this.getGraph();
 
         // Create the control nodes.
-        this.controls.feedback = this.io.createParam( feedbackLevel );
-        this.controls.time = this.io.createParam( time );
+        this.controls.feedback = this.io.createParam();
+        this.controls.time = this.io.createParam();
 
         // Create feedback and delay nodes
         graph.feedback = this.context.createGain();
@@ -37,8 +37,8 @@ class Delay extends DryWetNode {
     }
 }
 
-AudioIO.prototype.createDelay = function( time, feedbackLevel ) {
-    return new Delay( this, time, feedbackLevel );
+AudioIO.prototype.createDelay = function() {
+    return new Delay( this );
 };
 
 export default Delay;

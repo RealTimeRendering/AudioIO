@@ -40,7 +40,7 @@ class StereoDelay extends DryWetNode {
         graph.splitter.connect( graph.delayR, 1 );
         graph.delayL.connect( graph.merger, 0, 0 );
         graph.delayR.connect( graph.merger, 0, 1 );
-        graph.merger.connect( this.outputs[ 0 ] );
+        graph.merger.connect( this.wet );
 
         this.setGraph( graph );
     }

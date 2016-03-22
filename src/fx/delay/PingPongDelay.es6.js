@@ -6,7 +6,7 @@ import DryWetNode from "../../graphs/DryWetNode.es6";
 //    for time and feedback.
 
 class PingPongDelay extends DryWetNode {
-    constructor( io, time = 0.25, feedbackLevel = 0.5 ) {
+    constructor( io ) {
         super( io, 1, 1 );
 
         var graph = this.getGraph();
@@ -51,6 +51,6 @@ class PingPongDelay extends DryWetNode {
     }
 }
 
-AudioIO.prototype.createPingPongDelay = function( time, feedbackLevel ) {
-    return new PingPongDelay( this, time, feedbackLevel );
+AudioIO.prototype.createPingPongDelay = function() {
+    return new PingPongDelay( this );
 };
