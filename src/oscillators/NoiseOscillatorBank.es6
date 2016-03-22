@@ -1,6 +1,7 @@
 import "../core/AudioIO.es6";
 import Node from "../core/Node.es6";
-import math from "../mixins/math.es6";
+import BufferUtils from "../utilities/BufferUtils.es6";
+import BufferGenerators from "../buffers/BufferGenerators.es6";
 
 
 var BUFFERS = new WeakMap();
@@ -14,8 +15,7 @@ class NoiseOscillatorBank extends Node {
 
         var graph = this.getGraph( this ),
             types = this.constructor.types,
-            typeKeys = Object.keys( types ),
-            buffers = this._getBuffers();
+            typeKeys = Object.keys( types );
 
         graph.bufferSources = [];
         graph.outputGain = this.context.createGain();
@@ -23,10 +23,18 @@ class NoiseOscillatorBank extends Node {
         graph.outputGain.gain.value = 0;
 
         for ( var i = 0; i < typeKeys.length; ++i ) {
-            var source = this.context.createBufferSource(),
-                buffer = buffers[ typeKeys[ i ] ];
+            var source = this.context.createBufferSource();
 
-            source.buffer = buffer;
+            console.log( BufferGenerators[ this.constructor.generatorKeys[ i ] ] );
+
+            source.buffer = BufferUtils.generateBuffer(
+                this.io, // context
+                1, // channels
+                this.context.sampleRate * 5, // length (5 seconds)
+                this.context.sampleRate, // SampleRate
+                BufferGenerators[ this.constructor.generatorKeys[ i ] ] // Generator function
+            );
+
             source.loop = true;
             source.start( 0 );
 
@@ -39,70 +47,6 @@ class NoiseOscillatorBank extends Node {
 
         this.controls.type = graph.crossfader.controls.index;
         this.setGraph( graph );
-    }
-
-    _createSingleBuffer( type ) {
-        var sampleRate = this.context.sampleRate,
-            buffer = this.context.createBuffer( 1, sampleRate, sampleRate ),
-            channel = buffer.getChannelData( 0 ),
-            fn;
-
-        switch ( type ) {
-            case 'WHITE':
-                fn = Math.random;
-                break;
-
-            case 'GAUSSIAN_WHITE':
-                fn = math.nrand;
-                break;
-
-            case 'PINK':
-                math.generatePinkNumber( 128, 5 );
-                fn = math.getNextPinkNumber;
-                break;
-        }
-
-        for ( var i = 0; i < sampleRate; ++i ) {
-            channel[ i ] = fn() * 2 - 1;
-        }
-
-        console.log( type, Math.min.apply( Math, channel ), Math.max.apply( Math, channel ) );
-
-        return buffer;
-    }
-
-    _createBuffers() {
-        var buffers = {},
-            keys = Object.keys( buffers ),
-            types = this.constructor.types,
-            typeKeys = Object.keys( types ),
-            buffer;
-
-        // Buffers already created. Stop here.
-        if ( keys.length !== 0 ) {
-            return;
-        }
-
-        for ( var i = 0; i < typeKeys.length; ++i ) {
-            buffers[ typeKeys[ i ] ] = this._createSingleBuffer( typeKeys[ i ] );
-        }
-
-        this._setBuffers( buffers );
-    }
-
-    _getBuffers() {
-        var buffers = BUFFERS.get( this.io );
-
-        if ( buffers === undefined ) {
-            this._createBuffers();
-            buffers = BUFFERS.get( this.io );
-        }
-
-        return buffers;
-    }
-
-    _setBuffers( buffers ) {
-        BUFFERS.set( this.io, buffers );
     }
 
     start( time ) {
@@ -118,10 +62,6 @@ class NoiseOscillatorBank extends Node {
         time = time || this.context.currentTime;
         outputGain.gain.value = 0;
     }
-
-    cleanUp() {
-        super();
-    }
 }
 
 
@@ -130,6 +70,12 @@ NoiseOscillatorBank.types = {
     GAUSSIAN_WHITE: 1,
     PINK: 2
 };
+
+NoiseOscillatorBank.generatorKeys = [
+    'WhiteNoise',
+    'GaussianNoise',
+    'PinkNoise'
+];
 
 
 AudioIO.prototype.createNoiseOscillatorBank = function() {

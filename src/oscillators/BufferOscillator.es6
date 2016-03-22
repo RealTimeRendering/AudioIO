@@ -1,6 +1,7 @@
 import AudioIO from "../core/AudioIO.es6";
 import Node from "../core/Node.es6";
 import BufferGenerators from "../buffers/BufferGenerators.es6";
+import BufferUtils from "../utilities/BufferUtils.es6";
 
 // TODO:
 // 	- Issue with playback rate not having a wide enough range
@@ -42,7 +43,13 @@ class BufferOscillator extends Node {
 	}
 
 	start( when, phase ) {
-		var buffer = this.generator( this.io, 1, this.context.sampleRate, this.context.sampleRate ),
+		var buffer = BufferUtils.generateBuffer(
+				this.io,
+				1,
+				this.context.sampleRate,
+				this.context.sampleRate,
+				this.generator
+			),
 			bufferSource;
 
 		this.reset();

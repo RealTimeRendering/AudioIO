@@ -1,6 +1,11 @@
 import Utils from './Utils.es6';
 
 var BufferUtils = {};
+var BUFFER_STORE = {};
+
+function generateBufferStoreKey( length, numberOfChannels, sampleRate, iterator ) {
+	return length + '-' + numberOfChannels + '-' + sampleRate + '-' + iterator;
+}
 
 // TODO:
 // 	- It might be possible to decode the arraybuffer
@@ -40,6 +45,30 @@ BufferUtils.loadBuffer = function( io, uri ) {
 
 		xhr.send();
 	} );
+};
+
+BufferUtils.generateBuffer = function( io, numberOfChannels, length, sampleRate, iterator ) {
+	var key = generateBufferStoreKey( length, numberOfChannels, sampleRate, iterator.toString() ),
+		buffer,
+		channelData;
+
+	if ( BUFFER_STORE[ key ] ) {
+		return BUFFER_STORE[ key ];
+	}
+
+	buffer = io.context.createBuffer( numberOfChannels, length, sampleRate );
+
+	for ( var c = 0; c < numberOfChannels; ++c ) {
+		channelData = buffer.getChannelData( c );
+
+		for ( var i = 0; i < length; ++i ) {
+			channelData[ i ] = iterator( i, length, c, numberOfChannels );
+		}
+	}
+
+	BUFFER_STORE[ key ] = buffer;
+
+	return buffer;
 };
 
 
