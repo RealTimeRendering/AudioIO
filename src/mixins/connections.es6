@@ -23,7 +23,7 @@ export default {
         }
     },
 
-    disconnect: function( node, outputChannel = 0, inputChannel = 0) {
+    disconnect: function( node, outputChannel = 0, inputChannel = 0 ) {
         if ( node instanceof AudioParam || node instanceof AudioNode ) {
             this.outputs[ outputChannel ].disconnect.call( this.outputs[ outputChannel ], node, 0, inputChannel );
         }
@@ -32,9 +32,9 @@ export default {
             this.outputs[ outputChannel ].disconnect( node.inputs[ inputChannel ] );
         }
 
-        else if( node === undefined && this.outputs ) {
+        else if ( node === undefined && this.outputs ) {
             this.outputs.forEach( function( n ) {
-                if( n && typeof n.disconnect === 'function' ) {
+                if ( n && typeof n.disconnect === 'function' ) {
                     n.disconnect();
                 }
             } );
@@ -45,7 +45,7 @@ export default {
         var nodes = slice.call( arguments ),
             node = this;
 
-        for( var i = 0; i < nodes.length; ++i ) {
+        for ( var i = 0; i < nodes.length; ++i ) {
             node.connect.call( node, nodes[ i ] );
             node = nodes[ i ];
         }
@@ -55,7 +55,7 @@ export default {
         var nodes = slice.call( arguments ),
             node = this;
 
-        for( var i = 0; i < nodes.length; ++i ) {
+        for ( var i = 0; i < nodes.length; ++i ) {
             node.connect.call( node, nodes[ i ] );
         }
     }

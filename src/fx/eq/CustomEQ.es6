@@ -6,7 +6,8 @@ var FILTER_STORE = new WeakMap();
 function createFilter( io, type ) {
     var graph = {
         filter: io.context.createBiquadFilter(),
-        controls: {}
+        controls: {},
+        type: undefined
     };
 
     graph.filter.frequency.value = 0;

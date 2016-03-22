@@ -1,0 +1,14 @@
+{
+  "globals": {},
+  
+  "env": {
+    "browser": true
+  },
+
+  "rules": {
+    // Tons of rules you can use, for example...
+    "quotes": [1, "single"]
+  },
+
+  "parser": "babel-eslint"
+}
