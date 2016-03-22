@@ -7,29 +7,33 @@ class Delay extends DryWetNode {
     constructor( io, time = 0, feedbackLevel = 0 ) {
         super( io, 1, 1 );
 
+        var graph = this.getGraph();
+
         // Create the control nodes.
         this.controls.feedback = this.io.createParam( feedbackLevel );
         this.controls.time = this.io.createParam( time );
 
         // Create feedback and delay nodes
-        this.feedback = this.context.createGain();
-        this.delay = this.context.createDelay();
+        graph.feedback = this.context.createGain();
+        graph.delay = this.context.createDelay();
 
         // Setup the feedback loop
-        this.delay.connect( this.feedback );
-        this.feedback.connect( this.delay );
+        graph.delay.connect( graph.feedback );
+        graph.feedback.connect( graph.delay );
 
         // Also connect the delay to the wet output.
-        this.delay.connect( this.wet );
+        graph.delay.connect( this.wet );
 
         // Connect input to delay
-        this.inputs[ 0 ].connect( this.delay );
+        this.inputs[ 0 ].connect( graph.delay );
 
-        this.delay.delayTime.value = 0;
-        this.feedback.gain.value = 0;
+        graph.delay.delayTime.value = 0;
+        graph.feedback.gain.value = 0;
 
-        this.controls.time.connect( this.delay.delayTime );
-        this.controls.feedback.connect( this.feedback.gain );
+        this.controls.time.connect( graph.delay.delayTime );
+        this.controls.feedback.connect( graph.feedback.gain );
+
+        this.setGraph( graph );
     }
 }
 
