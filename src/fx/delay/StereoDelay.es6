@@ -1,8 +1,7 @@
-import AudioIO from "../core/AudioIO.es6";
-import DryWetNode from "../graphs/DryWetNode.es6";
+import AudioIO from "../../core/AudioIO.es6";
+import DryWetNode from "../../graphs/DryWetNode.es6";
 
-// TODO: Add feedbackLevel and delayTime Param instances
-// to control this node.
+
 class StereoDelay extends DryWetNode {
     constructor( io ) {
         super( io, 1, 1 );

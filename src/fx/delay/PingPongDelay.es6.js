@@ -1,9 +1,5 @@
-import AudioIO from "../core/AudioIO.es6";
-import _setIO from "../mixins/setIO.es6";
-import connections from "../mixins/connections.es6";
-import cleaners from "../mixins/cleaners.es6";
-import DryWetNode from "../graphs/DryWetNode.es6";
-import Delay from "./Delay.es6";
+import AudioIO from "../../core/AudioIO.es6";
+import DryWetNode from "../../graphs/DryWetNode.es6";
 
 // TODO:
 //  - Convert this node to use Param controls
@@ -65,10 +61,6 @@ class PingPongDelay extends DryWetNode {
         this.feedbackR.gain.value = level;
     }
 }
-
-AudioIO.mixinSingle( PingPongDelay.prototype, _setIO, '_setIO' );
-AudioIO.mixin( PingPongDelay.prototype, connections );
-AudioIO.mixin( PingPongDelay.prototype, cleaners );
 
 AudioIO.prototype.createPingPongDelay = function( time, feedbackLevel ) {
     return new PingPongDelay( this, time, feedbackLevel );
