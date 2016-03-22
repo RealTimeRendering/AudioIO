@@ -10,6 +10,8 @@ New Additions
 * Seeded random
 * ~~Remaining logical operators (NAND, NOR, XOR, NXOR)~~
 * ~~FilterBank (xfade), with HP, BP, LP, Notch to fade between.~~
+* ~~EQ~~
+* Starter EQ templates (3-bands EQ [lowshelf, peak, highshelf], 6-band EQ [LP12, lowshelf, peak, peak, highshelf, HP12 ])
 * Chorus
 * Flanger
 * Phaser
@@ -41,7 +43,7 @@ Refactoring
 
 * ~~Add `start` and `stop` controls to OscillatorBank, to mimic NoiseOscillator.~~
 
-* ~~Consider making *Bank classes sub-class Crossfader.~~ 
+* ~~Consider making *Bank classes sub-class Crossfader.~~
 	* Not doing this. Duplication of control parameters.
 
 * ~~Ensure graph objects themselves are removed during `cleanUp` operations, and not just the graph's keys.~~
