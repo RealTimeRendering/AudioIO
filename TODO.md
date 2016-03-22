@@ -12,7 +12,7 @@ New Additions
 * ~~FilterBank (xfade), with HP, BP, LP, Notch to fade between.~~
 * ~~EQ~~
 * Starter EQ templates (3-bands EQ [lowshelf, peak, highshelf], 6-band EQ [LP12, lowshelf, peak, peak, highshelf, HP12 ])
-* Chorus
+* ~~Chorus~~
 * Flanger
 * Phaser
 * BufferLoader

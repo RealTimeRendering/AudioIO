@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <label for="dryWet">Dry/Wet</label>
+    <input type="number" value="1" min="0" max="1" step="0.1" id="dryWet" />
+    <br/>    
+
+    <label for="feedback">Feedback (-1 to +1)</label>
+    <input type="number" value="0" min="-1" max="1" step="0.1" id="feedback" />
+    <br/>
+
+    <label for="delayTime">Delay 1 time (0ms to +10,s)</label>
+    <input type="number" value="0" min="0" max="10" step="0.1" id="delayTime" />
+    <br/>
+
+    <label for="modFrequency">Mod freq (0hz to +20hz)</label>
+    <input type="number" value="0" min="0" max="20" step="0.5" id="modFrequency" />
+    <br/>    
+
+    <label for="modAmount">Mod amount (0ms to 10ms)</label>
+    <input type="number" value="0" min="0" max="10" step="0.1" id="modAmount" />
+    <br/>    
+
+    <label for="modPhase">Mod phase for delay 2 (0 to 1)</label>
+    <input type="number" value="0" min="0" max="1" step="0.01" id="modPhase" />
+    <br/>    
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            osc = io.context.createOscillator(),
+            chorus = io.createSimpleChorus(),
+            dryWet = io.createConstant( 1 ),
+            feedback = io.createConstant( 0 ),
+            delayTime = io.createConstant( 0 ),
+            modFrequency = io.createConstant( 0 ),
+            modAmount = io.createConstant( 0 ),
+            modPhase = io.createConstant( 0 ),
+            scope = new Oscilloscope( 'canvas', io );
+
+        output.gain.value = 0.01;
+        osc.type = 'sawtooth';
+
+        dryWet.connect( chorus.controls.dryWet );
+        feedback.connect( chorus.controls.feedback );
+        delayTime.connect( chorus.controls.delayTime );
+        modFrequency.connect( chorus.controls.modFrequency );
+        modAmount.connect( chorus.controls.modAmount );
+        modPhase.connect( chorus.controls.modPhase );
+
+
+        osc.connect( chorus );
+        chorus.connect( scope.analyser );
+        chorus.connect( output );
+        output.connect( io.master );
+
+        scope.start( 0 );
+        osc.start();
+
+        document.querySelector( '#dryWet' ).addEventListener( 'input', function( e ) {
+            dryWet.value = +e.target.value;
+        } );
+
+        document.querySelector( '#feedback' ).addEventListener( 'input', function( e ) {
+            feedback.value = +e.target.value;
+        } );
+
+        document.querySelector( '#delayTime' ).addEventListener( 'input', function( e ) {
+            delayTime.value = +e.target.value / 1000;
+        } );
+
+        document.querySelector( '#modFrequency' ).addEventListener( 'input', function( e ) {
+            modFrequency.value = +e.target.value;
+        } );
+
+        document.querySelector( '#modAmount' ).addEventListener( 'input', function( e ) {
+            modAmount.value = +e.target.value / 1000;
+        } );
+
+        document.querySelector( '#modPhase' ).addEventListener( 'input', function( e ) {
+            modPhase.value = +e.target.value;
+        } );
+    </script>
+</body>
+</html>
