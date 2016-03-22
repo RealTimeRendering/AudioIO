@@ -54,6 +54,11 @@ app.createAudioPieces = function() {
     app.delayDryWet = app.io.createConstant( 0 );
     app.delayDryWet.connect( app.delay.controls.dryWet );
 
+    app.delayFeedback = app.io.createConstant( 0 );
+    app.delayTime = app.io.createConstant( 0 );
+    app.delayFeedback.connect( app.delay.controls.feedback );
+    app.delayTime.connect( app.delay.controls.time );
+
     // Create an intermediary gain node to sit between
     // the synth and the master output so ears will live
     // to see another day. The gain node's volume is controlled
@@ -173,10 +178,10 @@ app.onEnvReleaseKnobChange = function( value ) {
 };
 
 app.onDelayTimeKnobChange = function( value ) {
-    app.delay.time = value;
+    app.delayTime.value = value;
 };
 app.onDelayFeedbackKnobChange = function( value ) {
-    app.delay.feedbackLevel = value;
+    app.delayFeedback.value = value;
 };
 app.onDelayDryWetKnobChange = function( value ) {
     app.delayDryWet.value = value;

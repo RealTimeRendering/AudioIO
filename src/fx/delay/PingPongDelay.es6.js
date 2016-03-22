@@ -9,56 +9,45 @@ class PingPongDelay extends DryWetNode {
     constructor( io, time = 0.25, feedbackLevel = 0.5 ) {
         super( io, 1, 1 );
 
+        var graph = this.getGraph();
+
         // Create channel splitter and merger
-        this.splitter = this.context.createChannelSplitter( 2 );
-        this.merger = this.context.createChannelMerger( 2 );
+        graph.splitter = this.context.createChannelSplitter( 2 );
+        graph.merger = this.context.createChannelMerger( 2 );
 
         // Create feedback and delay nodes
-        this.feedbackL = this.context.createGain();
-        this.feedbackR = this.context.createGain();
-        this.delayL = this.context.createDelay();
-        this.delayR = this.context.createDelay();
+        graph.feedbackL = this.context.createGain();
+        graph.feedbackR = this.context.createGain();
+        graph.delayL = this.context.createDelay();
+        graph.delayR = this.context.createDelay();
 
         // Setup the feedback loop
-        this.delayL.connect( this.feedbackL );
-        this.feedbackL.connect( this.delayR );
-        this.delayR.connect( this.feedbackR );
-        this.feedbackR.connect( this.delayL );
+        graph.delayL.connect( graph.feedbackL );
+        graph.feedbackL.connect( graph.delayR );
+        graph.delayR.connect( graph.feedbackR );
+        graph.feedbackR.connect( graph.delayL );
 
 
-        this.inputs[ 0 ].connect( this.splitter );
-        this.splitter.connect( this.delayL, 0 );
-        this.feedbackL.connect( this.merger, 0, 0 );
-        this.feedbackR.connect( this.merger, 0, 1 );
-        this.merger.connect( this.wet );
+        this.inputs[ 0 ].connect( graph.splitter );
+        graph.splitter.connect( graph.delayL, 0 );
+        graph.feedbackL.connect( graph.merger, 0, 0 );
+        graph.feedbackR.connect( graph.merger, 0, 1 );
+        graph.merger.connect( this.wet );
 
-        this.time = time;
-        this.feedbackLevel = feedbackLevel;
-    }
+        graph.delayL.delayTime.value = 0;
+        graph.delayR.delayTime.value = 0;
+        graph.feedbackL.gain.value = 0;
+        graph.feedbackR.gain.value = 0;
 
-    get time() {
-        return this.delayL.delayTime;
-    }
+        this.controls.time = this.io.createParam();
+        this.controls.feedback = this.io.createParam();
 
-    set time( value ) {
-        this.delayL.delayTime.linearRampToValueAtTime(
-            value,
-            this.context.currentTime + 0.5
-        );
+        this.controls.time.connect( graph.delayL.delayTime );
+        this.controls.time.connect( graph.delayR.delayTime );
+        this.controls.feedback.connect( graph.feedbackL.gain );
+        this.controls.feedback.connect( graph.feedbackR.gain );
 
-        this.delayR.delayTime.linearRampToValueAtTime(
-            value,
-            this.context.currentTime + 0.5
-        );
-    }
-
-    get feedbackLevel() {
-        return this.feedbackL.gain.value;
-    }
-
-    set feedbackLevel( level ) {
-        this.feedbackL.gain.value = level;
-        this.feedbackR.gain.value = level;
+        this.setGraph( graph );
     }
 }
 

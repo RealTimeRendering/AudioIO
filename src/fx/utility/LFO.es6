@@ -1,5 +1,7 @@
 import "../../core/AudioIO.es6";
 import Node from "../../core/Node.es6";
+import BufferUtils from "../../buffers/BufferUtils.es6";
+import BufferGenerators from "../../buffers/BufferGenerators.es6";
 
 class LFO extends Node {
     constructor( io, cutoff = 5 ) {
@@ -12,12 +14,24 @@ class LFO extends Node {
         graph.phaseOffset = this.io.createPhaseOffset();
         graph.depth = this.context.createGain();
         graph.jitterDepth = this.context.createGain();
-        // graph.jitterOscillator = this.io.createWhiteNoiseOscillator();
+        graph.jitterOscillator = this.context.createBufferSource();
+
+        graph.jitterOscillator.buffer = BufferUtils.generateBuffer(
+            this.io, // context
+            1, // channels
+            this.context.sampleRate * 2, // length
+            this.context.sampleRate, // SampleRate
+            BufferGenerators.WhiteNoise // Generator function
+        );
 
         // Zero-out the depth gain nodes so the value 
         // of the depth controls aren't multiplied.
         graph.depth.gain.value = 0;
         graph.jitterDepth.gain.value = 0;
+
+        // Set jitter oscillator settings
+        graph.jitterOscillator.loop = true;
+        graph.jitterOscillator.start();
 
         // Create controls
         this.controls.frequency = graph.oscillator.controls.frequency;
@@ -38,8 +52,8 @@ class LFO extends Node {
         graph.depth.connect( this.outputs[ 0 ] );
 
         // Jitter connections
-        // graph.jitterOscillator.connect( graph.jitterDepth );
-        // graph.jitterDepth.connect( this.outputs[ 0 ] );
+        graph.jitterOscillator.connect( graph.jitterDepth );
+        graph.jitterDepth.connect( this.outputs[ 0 ] );
 
 
         this.setGraph( graph );
