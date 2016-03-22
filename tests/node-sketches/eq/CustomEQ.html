@@ -1,0 +1,58 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            osc = io.context.createOscillator(),
+            eq = io.createCustomEQ(),
+            scope = new Oscilloscope( 'canvas', io );
+
+        output.gain.value = 0.0;
+        osc.type = 'sawtooth';
+
+        osc.connect( eq );
+        eq.connect( scope.analyser );
+        eq.connect( output );
+        output.connect( io.master );
+
+        scope.start( 0 );
+        osc.start();
+
+        eq.addFilter( 'LP12' );
+        eq.addFilter( 'notch' );
+        eq.addFilter( 'HP12' );
+
+        setTimeout( function() {
+            eq.removeFilterAtIndex( 1 );
+            eq.removeFilterAtIndex( 0 );
+            eq.removeFilterAtIndex( 0 );
+
+            var notch = eq.addFilter( 'notch' );
+            var lp12 = eq.addFilter( 'LP12' );
+
+            setTimeout( function() {
+                eq.removeFilterAtIndex( 1 );
+                eq.removeFilter( lp12 );
+
+                setTimeout( function() {
+                    eq.removeAllFilters();
+
+                    var filter = eq.addFilter( 'HP12' );
+
+                    setTimeout( function() {
+                        filter.setType( 'notch' );
+                    }, 2000 );
+                }, 2000 );
+            }, 2000 );
+        }, 2000 );
+    </script>
+</body>
+</html>

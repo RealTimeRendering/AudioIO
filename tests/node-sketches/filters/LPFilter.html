@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <input type="number" value="0" min="0" max="1" step="0.1" id="slope" />
+    <input type="number" value="3500" min="1" max="22000" step="100" id="freq" />
+    <input type="number" value="1" min="0" max="5" step="0.1" id="Q" />
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            osc = io.context.createOscillator(),
+            filter = io.createLPFilter(),
+            filterSlope = io.createConstant( 0 ),
+            filterFreq = io.createConstant( 3500 ),
+            filterQ = io.createConstant( 1 ),
+            scope = new Oscilloscope( 'canvas', io );
+
+        output.gain.value = 0.01;
+        osc.type = 'sawtooth';
+
+        filterSlope.connect( filter.controls.slope );
+        filterFreq.connect( filter.controls.frequency );
+        filterQ.connect( filter.controls.Q );
+
+        osc.connect( filter );
+        filter.connect( scope.analyser );
+        filter.connect( output );
+        output.connect( io.master );
+
+        scope.start( 0 );
+        osc.start();
+
+        document.querySelector( '#slope' ).addEventListener( 'input', function( e ) {
+            filterSlope.value = +e.target.value;
+        } );
+
+        document.querySelector( '#freq' ).addEventListener( 'input', function( e ) {
+            filterFreq.value = +e.target.value;;
+        } );
+
+        document.querySelector( '#Q' ).addEventListener( 'input', function( e ) {
+            filterQ.value = +e.target.value;
+        } );
+    </script>
+</body>
+</html>

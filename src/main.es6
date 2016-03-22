@@ -6,9 +6,6 @@ import Node from './core/Node.es6';
 import Param from './core/Param.es6';
 import './core/WaveShaper.es6';
 
-
-// import './graphs/Crossfader.es6';
-
 import './fx/Delay.es6';
 import './fx/PingPongDelay.es6';
 import './fx/SineShaper.es6';
@@ -17,7 +14,15 @@ import './fx/StereoRotation.es6';
 // import './fx/BitReduction.es6';
 import './fx/SchroederAllPass.es6';
 import './fx/DCTrap.es6';
+
 import './fx/filters/FilterBank.es6';
+import './fx/filters/LPFilter.es6';
+import './fx/filters/BPFilter.es6';
+import './fx/filters/HPFilter.es6';
+import './fx/filters/NotchFilter.es6';
+import './fx/filters/AllPassFilter.es6';
+
+import './fx/eq/CustomEQ.es6';
 
 import './generators/OscillatorGenerator.es6';
 import './instruments/GeneratorPlayer.es6';
