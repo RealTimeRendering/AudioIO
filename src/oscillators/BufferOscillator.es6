@@ -1,7 +1,7 @@
 import AudioIO from "../core/AudioIO.es6";
 import Node from "../core/Node.es6";
 import BufferGenerators from "../buffers/BufferGenerators.es6";
-import BufferUtils from "../utilities/BufferUtils.es6";
+import BufferUtils from "../buffers/BufferUtils.es6";
 
 // TODO:
 // 	- Issue with playback rate not having a wide enough range

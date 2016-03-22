@@ -4,7 +4,7 @@ import signalCurves from './signalCurves.es6';
 import conversions from '../mixins/conversions.es6';
 import math from '../mixins/math.es6';
 import BufferGenerators from '../buffers/BufferGenerators.es6';
-import BufferUtils from '../utilities/BufferUtils.es6';
+import BufferUtils from '../buffers/BufferUtils.es6';
 import Utils from '../utilities/Utils.es6';
 
 class AudioIO {
@@ -91,8 +91,8 @@ AudioIO.mixinSingle( AudioIO.prototype, conversions, 'convert' );
 AudioIO.mixinSingle( AudioIO.prototype, math, 'math' );
 
 AudioIO.BufferUtils = BufferUtils;
-AudioIO.Utils = Utils;
 AudioIO.BufferGenerators = BufferGenerators;
+AudioIO.Utils = Utils;
 
 window.AudioIO = AudioIO;
 export default AudioIO;

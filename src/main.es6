@@ -108,7 +108,7 @@ import './oscillators/BufferOscillator.es6';
 
 // Utils
 import './buffers/BufferGenerators.es6';
-import './utilities/BufferUtils.es6';
+import './buffers/BufferUtils.es6';
 import './utilities/Utils.es6';
 
 // import './graphs/Sketch.es6';

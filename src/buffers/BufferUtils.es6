@@ -1,4 +1,4 @@
-import Utils from './Utils.es6';
+import Utils from '../utilities/Utils.es6';
 
 var BufferUtils = {};
 var BUFFER_STORE = {};
