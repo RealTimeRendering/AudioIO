@@ -12,7 +12,7 @@ import './fx/delay/Delay.es6';
 import './fx/delay/PingPongDelay.es6';
 import './fx/delay/StereoDelay.es6';
 
-import './fx/general/Chorus.es6';
+import './fx/general/DualChorus.es6';
 import './fx/general/SimpleChorus.es6';
 
 import './fx/eq/CustomEQ.es6';
