@@ -1,0 +1,62 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <label for="endValue">End Value</label>
+    <input type="number" value="850" min="0" max="22050" step="50" id="endValue" />
+    <br/>    
+
+    <label for="deltaValue">Lerp delta (0 to +1)</label>
+    <input type="number" value="0.0" min="0" max="1" step="0.0001" id="deltaValue" />
+    <br/>
+
+    
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            osc = io.context.createOscillator(),
+            lerp = io.createLerp(),
+            startValue = io.createConstant( 250 ),
+            endValue = io.createConstant( 850 ),
+            deltaValue = io.createConstant( 0.0 ),
+            counter = io.createCounter( (1/io.context.sampleRate) * 125, 1 ),
+            sum = io.context.createGain(),
+            scope = new Oscilloscope( 'canvas', io );
+
+        output.gain.value = 0.01;
+        osc.type = 'sine';
+        osc.frequency.value = 0;
+
+        startValue.connect( lerp.controls.start );
+        endValue.connect( lerp.controls.end );
+        deltaValue.connect( lerp.controls.delta );
+
+        // Linear
+        lerp.connect( osc.frequency );
+        counter.connect( deltaValue.outputs[ 0 ].gain );
+
+        osc.connect( scope.analyser );
+        osc.connect( output );
+        output.connect( io.master );
+
+        scope.start( 0 );
+        osc.start();
+        counter.start();
+
+        document.querySelector( '#endValue' ).addEventListener( 'input', function( e ) {
+            endValue.value = +e.target.value;
+        } );
+
+        document.querySelector( '#deltaValue' ).addEventListener( 'input', function( e ) {
+            deltaValue.value = +e.target.value;
+        } );
+    </script>
+</body>
+</html>
