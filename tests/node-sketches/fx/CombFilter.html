@@ -1,0 +1,61 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <label for="feedback">Q (0 to 1)</label>
+    <input type="number" value="0" min="-1" max="1" step="0.1" id="feedback" />
+    <br/>
+
+    <label for="delayTime">Frequency (0 to 22050hz)</label>
+    <input type="number" value="0" min="110" max="22050" step="110" id="delayTime" />
+    <br/>
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            output = io.context.createGain(),
+            bufferSource = io.context.createBufferSource(),
+            combFilter = io.createCombFilter(),
+            feedback = io.createConstant( 0.8 ),
+            delayTime = io.createConstant( 220 ),
+            osc = io.context.createOscillator(),
+            scope = new Oscilloscope( 'canvas', io );
+
+        output.gain.value = 0.1;
+        osc.frequency.value = 0;
+        delayTime.connect( osc.frequency );
+
+        feedback.connect( combFilter.controls.Q );
+        delayTime.connect( combFilter.controls.frequency );
+
+
+        bufferSource.connect( combFilter );
+        combFilter.connect( scope.analyser );
+        osc.connect( output );
+        combFilter.connect( output );
+        output.connect( io.master );
+
+        scope.start( 0 );
+        osc.start();
+
+        AudioIO.BufferUtils.loadBuffer( io, '../Kit03-150A-13.wav' ).then( function( buffer ) {
+            bufferSource.buffer = buffer;
+            bufferSource.loop = true;
+            bufferSource.start();
+        } );
+
+        document.querySelector( '#feedback' ).addEventListener( 'input', function( e ) {
+            feedback.value = +e.target.value;
+        } );
+
+        document.querySelector( '#delayTime' ).addEventListener( 'input', function( e ) {
+            delayTime.value = +e.target.value;
+        } );
+    </script>
+</body>
+</html>

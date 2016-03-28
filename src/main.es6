@@ -16,6 +16,7 @@ import './fx/general/DualChorus.es6';
 import './fx/general/SimpleChorus.es6';
 
 import './fx/eq/CustomEQ.es6';
+import './fx/eq/EQ2Band.es6';
 // import './fx/BitReduction.es6';
 import './fx/SchroederAllPass.es6';
 import './fx/filters/FilterBank.es6';
@@ -24,6 +25,7 @@ import './fx/filters/BPFilter.es6';
 import './fx/filters/HPFilter.es6';
 import './fx/filters/NotchFilter.es6';
 import './fx/filters/AllPassFilter.es6';
+import './fx/filters/CombFilter.es6';
 import './fx/saturation/SineShaper.es6';
 import './fx/utility/DCTrap.es6';
 import './fx/utility/LFO.es6';

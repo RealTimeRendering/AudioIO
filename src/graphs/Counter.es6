@@ -10,13 +10,16 @@ class Counter extends Node {
 
         this.running = false;
 
-        this.stepTime = stepTime || 1 / this.context.sampleRate;
+        // this.stepTime = stepTime || 1 / this.context.sampleRate;
 
-        this.constant = this.io.createParam( increment );
+        this.controls.increment = this.io.createParam( increment );
+        this.controls.limit = this.io.createParam( limit );
+        this.controls.stepTime = this.io.createParam( stepTime || 1 / this.context.sampleRate );
+
         this.multiply = this.io.createMultiply();
 
         this.delay = this.context.createDelay();
-        this.delay.delayTime.value = this.stepTime;
+        this.controls.stepTime.connect( this.delay.delayTime );
 
         this.feedback = this.context.createGain();
         this.feedback.gain.value = 0;
@@ -26,11 +29,16 @@ class Counter extends Node {
         this.delay.connect( this.feedback );
         this.feedback.connect( this.delay );
 
-        this.lessThan = this.io.createLessThan( limit );
+        this.lessThan = this.io.createLessThan();
+        this.controls.limit.connect( this.lessThan.controls.value );
         this.delay.connect( this.lessThan );
         // this.lessThan.connect( this.feedback.gain );
-        this.constant.connect( this.multiply, 0, 0 );
+        this.controls.increment.connect( this.multiply, 0, 0 );
         this.lessThan.connect( this.multiply, 0, 1 );
+
+        // Clamp from 0 to `limit` value.
+        // this.clamp = this.io.createClamp( 0 );
+        // this.controls.limit.connect( this.clamp.controls.max );
 
         this.delay.connect( this.outputs[ 0 ] );
 
@@ -49,7 +57,7 @@ class Counter extends Node {
     start() {
         if( this.running === false ) {
             this.running = true;
-            this.delay.delayTime.value = this.stepTime;
+            // this.delay.delayTime.value = this.stepTime;
             this.lessThan.connect( this.feedback.gain );
         }
     }
@@ -58,7 +66,7 @@ class Counter extends Node {
         if( this.running === true ) {
             this.running = false;
             this.lessThan.disconnect( this.feedback.gain );
-            this.delay.delayTime.value = 0;
+            // this.delay.delayTime.value = 0;
         }
     }
 
