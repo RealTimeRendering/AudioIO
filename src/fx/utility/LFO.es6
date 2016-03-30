@@ -24,7 +24,9 @@ class LFO extends Node {
             BufferGenerators.WhiteNoise // Generator function
         );
 
-        // Zero-out the depth gain nodes so the value 
+        graph.jitterOscillator.playbackRate.value = 0;
+
+        // Zero-out the depth gain nodes so the value
         // of the depth controls aren't multiplied.
         graph.depth.gain.value = 0;
         graph.jitterDepth.gain.value = 0;
@@ -40,11 +42,13 @@ class LFO extends Node {
         this.controls.depth = this.io.createParam();
         this.controls.offset = graph.phaseOffset.controls.phase;
         this.controls.jitter = this.io.createParam();
+        this.controls.jitterRate = this.io.createParam();
 
         // Control connections.
         this.controls.frequency.connect( graph.phaseOffset.controls.frequency );
         this.controls.depth.connect( graph.depth.gain );
         this.controls.jitter.connect( graph.jitterDepth.gain );
+        this.controls.jitterRate.connect( graph.jitterOscillator.playbackRate );
 
         // Main LFO osc connections
         graph.oscillator.connect( graph.phaseOffset );

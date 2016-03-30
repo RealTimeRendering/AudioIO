@@ -19,7 +19,7 @@ function SpectrumAnalyser( element, io, bars, width, height, fftSize ) {
     this.canvas.width = this.width;
     this.canvas.height = this.height;
 
-    this.bars = bars || 10;
+    this.bars = bars || this.canvas.width;
 
     // Set context styles, inc. lineWidth based on pixel-ratio.
     this.ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';

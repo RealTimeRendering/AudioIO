@@ -1,0 +1,93 @@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <canvas></canvas>
+
+    <label for="frequency">Freq (0 to 4hz)</label>
+    <input type="number" value="1" min="0" max="4" step="0.1" id="frequency" />
+    <br/>
+
+    <label for="detune">Detune (-1000cents to 1000cents)</label>
+    <input type="number" value="0" min="-1000" max="1000" step="1" id="detune" />
+    <br/>
+
+    <label for="waveform">Waveform (0 to 3)</label>
+    <input type="number" value="0" min="0" max="3" step="0.1" id="waveform" />
+    <br/>
+
+    <label for="depth">Depth (0 to 1)</label>
+    <input type="number" value="1" min="0" max="1" step="0.1" id="depth" />
+    <br/>
+
+    <label for="offset">Offset (0 to 1)</label>
+    <input type="number" value="0" min="0" max="1" step="0.1" id="offset" />
+    <br/>
+
+    <label for="jitter">Jitter (0 to 4)</label>
+    <input type="number" value="0" min="0" max="4" step="0.1" id="jitter" />
+    <br/>
+
+    <label for="jitterRate">JitterRate (0 to 4)</label>
+    <input type="number" value="0" min="0" max="4" step="0.0001" id="jitterRate" />
+    <br/>
+
+    <script type="text/javascript" src="../../../build/AudioIO.js"></script>
+    <script type="text/javascript" src="../Oscilloscope.js"></script>
+
+    <script type="text/javascript">
+        var io = new AudioIO(),
+            scope = new Oscilloscope( 'canvas', io ),
+            lfo = io.createLFO(),
+            frequency = io.createConstant( 1 ),
+            detune = io.createConstant( 0 ),
+            waveform = io.createConstant( 0 ),
+            depth = io.createConstant( 1 ),
+            offset = io.createConstant( 0 ),
+            jitter = io.createConstant( 0 ),
+            jitterRate = io.createConstant( 0 );
+
+        frequency.connect( lfo.controls.frequency );
+        detune.connect( lfo.controls.detune );
+        waveform.connect( lfo.controls.waveform );
+        depth.connect( lfo.controls.depth );
+        offset.connect( lfo.controls.offset );
+        jitter.connect( lfo.controls.jitter );
+        jitterRate.connect( lfo.controls.jitterRate );
+
+        lfo.connect( scope.analyser );
+        scope.start( 0 );
+        lfo.start();
+
+
+        document.querySelector( '#frequency' ).addEventListener( 'input', function( e ) {
+            frequency.value = +e.target.value;
+        } );
+
+        document.querySelector( '#detune' ).addEventListener( 'input', function( e ) {
+            detune.value = +e.target.value;
+        } );
+
+        document.querySelector( '#waveform' ).addEventListener( 'input', function( e ) {
+            waveform.value = +e.target.value;
+        } );
+
+        document.querySelector( '#depth' ).addEventListener( 'input', function( e ) {
+            depth.value = +e.target.value;
+        } );
+
+        document.querySelector( '#offset' ).addEventListener( 'input', function( e ) {
+            offset.value = +e.target.value;
+        } );
+
+        document.querySelector( '#jitter' ).addEventListener( 'input', function( e ) {
+            jitter.value = +e.target.value;
+        } );
+
+        document.querySelector( '#jitterRate' ).addEventListener( 'input', function( e ) {
+            jitterRate.value = +e.target.value;
+        } );
+    </script>
+</body>
+</html>

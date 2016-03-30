@@ -56,6 +56,10 @@ pink.generate();
 
 
 export default {
+	lerp: function( start, end, delta ) {
+		return start + ( ( end - start ) * delta );
+	},
+
 	roundFromEpsilon: function( n ) {
 		let rounded = Math.round( n );
 

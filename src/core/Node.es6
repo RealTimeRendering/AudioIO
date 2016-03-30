@@ -20,6 +20,10 @@ class Node {
         // controlled with audio signals.
         this.controls = {};
 
+        // This object will hold attributes for the controls
+        // stored above. Useful for creating UI elements.
+        this.controlProperties = {};
+
         // Both these objects will just hold references
         // to either input or output nodes. Handy when
         // wanting to connect specific ins/outs without
@@ -36,6 +40,9 @@ class Node {
         }
     }
 
+
+
+
     setGraph( graph ) {
         graphs.set( this, graph );
     }
@@ -43,6 +50,64 @@ class Node {
     getGraph() {
         return graphs.get( this ) || {};
     }
+
+
+    resolveGraphPath( str ) {
+        var graph = this.getGraph(),
+            keys = str.split( '.' ),
+            obj = graph;
+
+        for( var i = 0; i < keys.length; ++i ) {
+            if( i === 0 && keys[ i ] === 'graph' ) {
+                continue;
+            }
+
+            obj = obj[ keys[ i ] ];
+        }
+
+        return obj;
+    }
+
+    addControls() {
+        var controlsMap = this.constructor.controlsMap;
+
+        if( controlsMap ) {
+            for( var name in controlsMap ) {
+                this.addControl( name, controlsMap[ name ] );
+            }
+        }
+    }
+
+    addControl( name, options ) {
+        if( options.delegate ) {
+            this.controls[ name ] = this.resolveGraphPath( options.delegate );
+        }
+        else {
+            this.controls[ name ] = this.io.createParam();
+        }
+
+        if( Array.isArray( options.targets ) ) {
+            for( var i = 0; i < options.targets.length; ++i ) {
+                this.controls[ name ].connect( this.resolveGraphPath( options.targets[ i ] ) );
+            }
+        }
+        else if( options.targets ) {
+            this.controls[ name ].connect( this.resolveGraphPath( options.targets ) );
+        }
+
+        this.controlProperties[ name ] = {};
+
+        for( var i in options ) {
+            if( options[ i ] === 'sampleRate' ) {
+                this.controlProperties[ name ][ i ] = this.context.sampleRate * 0.5;
+            }
+            else {
+                this.controlProperties[ name ][ i ] = options[ i ];
+            }
+        }
+    }
+
+
 
     addInputChannel() {
         this.inputs.push( this.context.createGain() );

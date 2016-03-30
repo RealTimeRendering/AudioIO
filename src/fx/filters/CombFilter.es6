@@ -27,12 +27,21 @@ class CombFilter extends Node {
         graph.feedback.connect( graph.delay );
         graph.delay.connect( this.outputs[ 0 ] );
 
+        // There are two controls for the delayTime AudioParam here:
+        //
+        //  - `frequency`: allows the CombFilter to resonate at the
+        //                 given frequency value.
+        //  - `delayTime`: allows for direct control of the delayTime
+        //                 AudioParam.
+        //
+        // Best to use only one of these at a time!
         this.controls.frequency = this.io.createParam();
+        this.controls.delayTime = this.io.createParam();
         this.controls.Q = this.io.createParam();
         this.controls.frequency.connect( graph.reciprocal );
         graph.reciprocal.connect( graph.delay.delayTime );
+        this.controls.delayTime.connect( graph.delay.delayTime );
         this.controls.Q.connect( graph.feedback.gain );
-
 
         this.setGraph( graph );
     }

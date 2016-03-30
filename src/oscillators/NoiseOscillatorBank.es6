@@ -25,8 +25,6 @@ class NoiseOscillatorBank extends Node {
         for ( var i = 0; i < typeKeys.length; ++i ) {
             var source = this.context.createBufferSource();
 
-            console.log( BufferGenerators[ this.constructor.generatorKeys[ i ] ] );
-
             source.buffer = BufferUtils.generateBuffer(
                 this.io, // context
                 1, // channels

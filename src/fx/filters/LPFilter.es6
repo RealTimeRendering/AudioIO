@@ -18,15 +18,6 @@ class LPFilter extends Node {
         graph.lp12dB.Q.value = 0;
         graph.lp24dB.Q.value = 0;
 
-        this.controls.slope = graph.crossfaderSlope.controls.index;
-        this.controls.frequency = this.io.createParam();
-        this.controls.Q = this.io.createParam();
-
-        this.controls.frequency.connect( graph.lp12dB.frequency );
-        this.controls.frequency.connect( graph.lp24dB.frequency );
-        this.controls.Q.connect( graph.lp12dB.Q );
-        this.controls.Q.connect( graph.lp24dB.Q );
-
         this.inputs[ 0 ].connect( graph.lp12dB );
         graph.lp12dB.connect( graph.crossfaderSlope, 0, 0 );
         graph.lp12dB.connect( graph.lp24dB );
@@ -34,8 +25,30 @@ class LPFilter extends Node {
         graph.crossfaderSlope.connect( this.outputs[ 0 ] );
 
         this.setGraph( graph );
+        this.addControls();
     }
 }
+
+LPFilter.controlsMap = {
+    slope: {
+        delegate: 'graph.crossfaderSlope.controls.index',
+        min: 0,
+        max: 1
+    },
+
+    frequency: {
+        targets: [ 'graph.lp12dB.frequency', 'graph.lp24dB.frequency' ],
+        min: 0,
+        max: 'sampleRate',
+        exponent: 2
+    },
+
+    Q: {
+        targets: [ 'graph.lp12dB.Q', 'graph.lp12dB.Q' ],
+        min: 0,
+        max: 20
+    }
+};
 
 AudioIO.prototype.createLPFilter = function() {
     return new LPFilter( this );
