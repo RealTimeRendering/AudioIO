@@ -24,7 +24,7 @@ function SpectrumAnalyser( element, io, bars, width, height, fftSize ) {
     // Set context styles, inc. lineWidth based on pixel-ratio.
     this.ctx.strokeStyle = 'rgba( 255, 255, 255, 1.0 )';
     this.ctx.lineWidth = window.devicePixelRatio * 0.5;
-    this.ctx.fillStyle = 'rgba( 50, 50, 50, 0.9 )';
+    this.ctx.fillStyle = 'rgba( 50, 50, 50, 1 )';
 
     // Set a minimum threshold by which the zero crossing
     // will be found.
@@ -55,7 +55,8 @@ SpectrumAnalyser.prototype.draw = function() {
     var length = this.data.length,
         barSize = Math.floor( length / this.bars ),
         barWidth = this.width / this.bars,
-        ctx = this.ctx;
+        ctx = this.ctx,
+        prevX = 0;
 
     ctx.clearRect( 0, 0, this.width, this.height );
 
@@ -72,20 +73,41 @@ SpectrumAnalyser.prototype.draw = function() {
         // Draw the bars on the canvas
         var barWidth = this.width / this.bars;
         var scaled_average = ( average / 256 );
+        var x = this.scaleNumberExp( i * barWidth, 0, this.width, 0, this.width, 0.5 );
 
         // console.log( scaled_average, this.scalarToDb( scaled_average ) );
 
         this.ctx.fillRect(
-            i * barWidth,
+            x,
             this.height,
-            barWidth,
-            scaled_average * -this.height
+            x - prevX,
+            this.scaleNumberExp( scaled_average * -this.height, 0, this.height, 0, this.height, 2 )
         );
+
+        prevX = x;
     }
 };
 
 SpectrumAnalyser.prototype.scalarToDb = function( scalar ) {
     return 20 * ( Math.log( scalar ) / Math.LN10 );
+};
+
+SpectrumAnalyser.prototype.scaleNumberExp = function( num, lowIn, highIn, lowOut, highOut, exp ) {
+    if ( typeof exp !== 'number' || exp === 1 ) {
+        return this.scaleNumber( num, lowIn, highIn, lowOut, highOut );
+    }
+
+    if ( ( num - lowIn ) / ( highIn - lowIn ) === 0 ) {
+        return lowOut;
+    }
+    else {
+        if ( ( num - lowIn ) / ( highIn - lowIn ) > 0 ) {
+            return ( lowOut + ( highOut - lowOut ) * Math.pow( ( num - lowIn ) / ( highIn - lowIn ), exp ) );
+        }
+        else {
+            return ( lowOut + ( highOut - lowOut ) * -( Math.pow( ( ( -num + lowIn ) / ( highIn - lowIn ) ), exp ) ) );
+        }
+    }
 };
 
 SpectrumAnalyser.prototype.update = function() {

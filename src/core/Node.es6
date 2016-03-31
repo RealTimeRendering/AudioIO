@@ -2,6 +2,7 @@ import AudioIO from "./AudioIO.es6";
 import _setIO from "../mixins/setIO.es6";
 import connections from "../mixins/connections.es6";
 import cleaners from "../mixins/cleaners.es6";
+import controls from "../mixins/controls.es6";
 
 var graphs = new WeakMap();
 
@@ -52,60 +53,6 @@ class Node {
     }
 
 
-    resolveGraphPath( str ) {
-        var graph = this.getGraph(),
-            keys = str.split( '.' ),
-            obj = graph;
-
-        for( var i = 0; i < keys.length; ++i ) {
-            if( i === 0 && keys[ i ] === 'graph' ) {
-                continue;
-            }
-
-            obj = obj[ keys[ i ] ];
-        }
-
-        return obj;
-    }
-
-    addControls() {
-        var controlsMap = this.constructor.controlsMap;
-
-        if( controlsMap ) {
-            for( var name in controlsMap ) {
-                this.addControl( name, controlsMap[ name ] );
-            }
-        }
-    }
-
-    addControl( name, options ) {
-        if( options.delegate ) {
-            this.controls[ name ] = this.resolveGraphPath( options.delegate );
-        }
-        else {
-            this.controls[ name ] = this.io.createParam();
-        }
-
-        if( Array.isArray( options.targets ) ) {
-            for( var i = 0; i < options.targets.length; ++i ) {
-                this.controls[ name ].connect( this.resolveGraphPath( options.targets[ i ] ) );
-            }
-        }
-        else if( options.targets ) {
-            this.controls[ name ].connect( this.resolveGraphPath( options.targets ) );
-        }
-
-        this.controlProperties[ name ] = {};
-
-        for( var i in options ) {
-            if( options[ i ] === 'sampleRate' ) {
-                this.controlProperties[ name ][ i ] = this.context.sampleRate * 0.5;
-            }
-            else {
-                this.controlProperties[ name ][ i ] = options[ i ];
-            }
-        }
-    }
 
 
 
@@ -240,6 +187,7 @@ AudioIO.mixinSingle( Node.prototype, _setIO, '_setIO' );
 AudioIO.mixinSingle( Node.prototype, cleaners.cleanUpInOuts, '_cleanUpInOuts' );
 AudioIO.mixinSingle( Node.prototype, cleaners.cleanIO, '_cleanIO' );
 AudioIO.mixin( Node.prototype, connections );
+AudioIO.mixin( Node.prototype, controls );
 
 
 AudioIO.prototype.createNode = function( numInputs, numOutputs ) {

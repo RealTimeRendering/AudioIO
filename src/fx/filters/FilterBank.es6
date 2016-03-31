@@ -21,12 +21,8 @@ class FilterBank extends Node {
         graph.filters12dB = [];
         graph.filters24dB = [];
 
-        this.controls.slope = graph.crossfaderSlope.controls.index;
-        this.controls.frequency = this.io.createParam();
-        this.controls.Q = this.io.createParam();
-        this.controls.filterType = this.io.createParam();
-        this.controls.filterType.connect( graph.crossfader12dB.controls.index );
-        this.controls.filterType.connect( graph.crossfader24dB.controls.index );
+        graph.proxyFrequencyControl = this.context.createGain();
+        graph.proxyQControl = this.context.createGain();
 
         // Create the first set of 12db filters (standard issue with WebAudioAPI)
         for ( var i = 0; i < FILTER_TYPES.length; ++i ) {
@@ -36,8 +32,8 @@ class FilterBank extends Node {
             filter.frequency.value = 0;
             filter.Q.value = 0;
 
-            this.controls.frequency.connect( filter.frequency );
-            this.controls.Q.connect( filter.Q );
+            graph.proxyFrequencyControl.connect( filter.frequency );
+            graph.proxyQControl.connect( filter.Q );
             this.inputs[ 0 ].connect( filter );
             filter.connect( graph.crossfader12dB, 0, i );
 
@@ -54,10 +50,8 @@ class FilterBank extends Node {
             filter.frequency.value = 0;
             filter.Q.value = 0;
 
-            console.log( filter );
-
-            this.controls.frequency.connect( filter.frequency );
-            this.controls.Q.connect( filter.Q );
+            graph.proxyFrequencyControl.connect( filter.frequency );
+            graph.proxyQControl.connect( filter.Q );
             graph.filters12dB[ i ].connect( filter );
             filter.connect( graph.crossfader24dB, 0, i );
 
@@ -69,8 +63,36 @@ class FilterBank extends Node {
         graph.crossfaderSlope.connect( this.outputs[ 0 ] );
 
         this.setGraph( graph );
+        this.addControls( FilterBank.controlsMap );
     }
 }
+
+FilterBank.controlsMap = {
+    frequency: {
+        targets: 'graph.proxyFrequencyControl',
+        min: 0,
+        max: 'sampleRate',
+        exponent: 2
+    },
+
+    Q: {
+        targets: 'graph.proxyQControl',
+        min: 0,
+        max: 10
+    },
+
+    slope: {
+        delegate: 'graph.crossfaderSlope.controls.index',
+        min: 0,
+        max: 1
+    },
+
+    filterType: {
+        targets: [ 'graph.crossfader12dB.controls.index', 'graph.crossfader24dB.controls.index' ],
+        min: 0,
+        max: FILTER_TYPES.length - 1
+    }
+};
 
 AudioIO.prototype.createFilterBank = function() {
     return new FilterBank( this );

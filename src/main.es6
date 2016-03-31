@@ -26,6 +26,7 @@ import './fx/filters/HPFilter.es6';
 import './fx/filters/NotchFilter.es6';
 import './fx/filters/AllPassFilter.es6';
 import './fx/filters/CombFilter.es6';
+import './fx/filters/CombFilterBank.es6';
 import './fx/saturation/SineShaper.es6';
 import './fx/utility/DCTrap.es6';
 import './fx/utility/LFO.es6';

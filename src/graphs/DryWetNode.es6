@@ -25,41 +25,45 @@ class DryWetNode extends Node {
     constructor( io ) {
         super( io, 2, 1 );
 
+        var graph = this.getGraph();
+
         this.dry = this.inputs[ 0 ];
         this.wet = this.inputs[ 1 ];
 
         // Invert wet signal's phase
-        this.wetInputInvert = this.context.createGain();
-        this.wetInputInvert.gain.value = -1;
-        this.wet.connect( this.wetInputInvert );
+        graph.wetInputInvert = this.context.createGain();
+        graph.wetInputInvert.gain.value = -1;
+        this.wet.connect( graph.wetInputInvert );
 
         // Create the fader node
-        this.fader = this.context.createGain();
-        this.fader.gain.value = 0;
-
-        // Create the control node. It sets the fader's value.
-        this.dryWetControl = this.io.createParam();
-        this.dryWetControl.connect( this.fader.gain );
-
+        graph.fader = this.context.createGain();
+        graph.fader.gain.value = 0;
         // Invert the fader node's phase
-        this.faderInvert = this.context.createGain();
-        this.faderInvert.gain.value = -1;
+        graph.faderInvert = this.context.createGain();
+        graph.faderInvert.gain.value = -1;
 
         // Connect fader to fader phase inversion,
         // and fader phase inversion to output.
-        this.wetInputInvert.connect( this.fader );
-        this.fader.connect( this.faderInvert );
-        this.faderInvert.connect( this.outputs[ 0 ] );
+        graph.wetInputInvert.connect( graph.fader );
+        graph.fader.connect( graph.faderInvert );
+        graph.faderInvert.connect( this.outputs[ 0 ] );
 
         // Connect dry input to both the output and the fader node
         this.dry.connect( this.outputs[ 0 ] );
-        this.dry.connect( this.fader );
+        this.dry.connect( graph.fader );
 
-        // Add a 'dryWet' property to the controls object.
-        this.controls.dryWet = this.dryWetControl;
+        this.setGraph( graph );
+        this.addControls( DryWetNode.controlsMap );
     }
-
 }
+
+DryWetNode.controlsMap = {
+    dryWet: {
+        targets: 'graph.fader.gain',
+        min: 0,
+        max: 1
+    }
+};
 
 
 

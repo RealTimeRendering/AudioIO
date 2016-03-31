@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="../../res/css/Knob.css">
+    </head>
+
+    <body>
+        <canvas></canvas>
+
+        <script type="text/javascript" src="../../../../build/AudioIO.js"></script>
+        <script type="text/javascript" src="../../SpectrumAnalyser.js"></script>
+        <script type="text/javascript" src="../../res/js/Knob.js"></script>
+        <script type="text/javascript" src="../../res/js/createKnobs.js"></script>
+
+        <script type="text/javascript">
+            var io = new AudioIO(),
+                delay = io.createPingPongDelay(),
+                analyser = new SpectrumAnalyser( 'canvas', io ),
+                bufferSource = io.context.createBufferSource(),
+                output = io.context.createGain();
+
+            createControls( delay, io );
+
+            output.gain.value = 0.1;
+            bufferSource.connect( delay );
+            delay.connect( analyser.analyser );
+            delay.connect( output );
+            output.connect( io.master );
+
+            analyser.start( 0 );
+
+            AudioIO.BufferUtils.loadBuffer( io, '../../stinger1.wav' ).then( function( buffer ) {
+                bufferSource.buffer = buffer;
+                bufferSource.loop = true;
+                bufferSource.start();
+            } );
+        </script>
+    </body>
+</html>

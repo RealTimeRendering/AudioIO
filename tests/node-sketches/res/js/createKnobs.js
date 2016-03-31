@@ -1,9 +1,15 @@
 function createControls( node, io ) {
+    var wrapper = document.createElement( 'div' ),
+        title = document.createElement( 'h2' ),
+        knobs = [];
+
+    title.textContent = node.constructor.name;
+    wrapper.appendChild( title );
+
     for ( var controlName in node.controls ) {
         var element = document.createElement( 'div' ),
             map = node.controlProperties[ controlName ],
-            constant = io.createConstant( 0 ),
-            knob;
+            constant = io.createConstant( 0 );
 
         element.className = 'knob indicator-circle rubber small';
         element.setAttribute( 'label', controlName );
@@ -14,7 +20,7 @@ function createControls( node, io ) {
 
         constant.connect( node.controls[ controlName ] );
 
-        knob = new Knob( element, {
+        knobs[ i ] = new Knob( element, {
             callback: ( function( constant ) {
                 return function( value, knob ) {
                     constant.value = value;
@@ -24,7 +30,10 @@ function createControls( node, io ) {
             size: 'small'
         } );
 
-
-        document.body.appendChild( element );
+        wrapper.appendChild( element );
     }
+
+    document.body.appendChild( wrapper );
+
+    return knobs;
 }

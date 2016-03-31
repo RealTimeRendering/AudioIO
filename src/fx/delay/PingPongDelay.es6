@@ -6,7 +6,7 @@ import DryWetNode from "../../graphs/DryWetNode.es6";
 //    for time and feedback.
 
 class PingPongDelay extends DryWetNode {
-    constructor( io ) {
+    constructor( io, maxDelayTime = 1 ) {
         super( io, 1, 1 );
 
         var graph = this.getGraph();
@@ -18,8 +18,8 @@ class PingPongDelay extends DryWetNode {
         // Create feedback and delay nodes
         graph.feedbackL = this.context.createGain();
         graph.feedbackR = this.context.createGain();
-        graph.delayL = this.context.createDelay();
-        graph.delayR = this.context.createDelay();
+        graph.delayL = this.context.createDelay( maxDelayTime );
+        graph.delayR = this.context.createDelay( maxDelayTime );
 
         // Setup the feedback loop
         graph.delayL.connect( graph.feedbackL );
@@ -39,18 +39,27 @@ class PingPongDelay extends DryWetNode {
         graph.feedbackL.gain.value = 0;
         graph.feedbackR.gain.value = 0;
 
-        this.controls.time = this.io.createParam();
-        this.controls.feedback = this.io.createParam();
-
-        this.controls.time.connect( graph.delayL.delayTime );
-        this.controls.time.connect( graph.delayR.delayTime );
-        this.controls.feedback.connect( graph.feedbackL.gain );
-        this.controls.feedback.connect( graph.feedbackR.gain );
-
         this.setGraph( graph );
+        this.addControls( PingPongDelay.controlsMap, maxDelayTime );
     }
 }
 
-AudioIO.prototype.createPingPongDelay = function() {
-    return new PingPongDelay( this );
+PingPongDelay.controlsMap = {
+    delayTime: {
+        targets: [ 'graph.delayL.delayTime', 'graph.delayR.delayTime' ],
+        min: 0,
+        max: function( io, context, constructorArguments ) {
+            return constructorArguments[ 0 ];
+        }
+    },
+
+    feedback: {
+        targets: [ 'graph.feedbackL.gain', 'graph.feedbackR.gain' ],
+        min: 0,
+        max: 1
+    }
+};
+
+AudioIO.prototype.createPingPongDelay = function( maxDelayTime ) {
+    return new PingPongDelay( this, maxDelayTime );
 };

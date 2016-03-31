@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="../../res/css/Knob.css">
+    </head>
+
+    <body>
+        <canvas></canvas>
+
+        <script type="text/javascript" src="../../../../build/AudioIO.js"></script>
+        <script type="text/javascript" src="../../SpectrumAnalyser.js"></script>
+        <script type="text/javascript" src="../../res/js/Knob.js"></script>
+        <script type="text/javascript" src="../../res/js/createKnobs.js"></script>
+
+        <script type="text/javascript">
+            var io = new AudioIO(),
+                osc = io.createNoiseOscillatorBank(),
+                filter = io.createFilterBank(),
+                analyser = new SpectrumAnalyser( 'canvas', io );
+
+            createControls( filter, io );
+
+            osc.connect( filter );
+            filter.connect( analyser.analyser );
+
+            analyser.start( 0 );
+            osc.start();
+        </script>
+    </body>
+</html>

@@ -25,7 +25,7 @@ class LPFilter extends Node {
         graph.crossfaderSlope.connect( this.outputs[ 0 ] );
 
         this.setGraph( graph );
-        this.addControls();
+        this.addControls( LPFilter.controlsMap );
     }
 }
 

@@ -17,9 +17,8 @@ class OscillatorBank extends Node {
         graph.crossfader = this.io.createCrossfader( OSCILLATOR_TYPES.length, 0 );
         graph.oscillators = [];
 
-        this.controls.frequency = this.io.createParam();
-        this.controls.detune = this.io.createParam();
-        this.controls.waveform = graph.crossfader.controls.index;
+        graph.frequencyControlProxy = this.context.createGain();
+        graph.detuneControlProxy = this.context.createGain();
 
         for( var i = 0; i < OSCILLATOR_TYPES.length; ++i ) {
             var osc = this.context.createOscillator();
@@ -28,8 +27,8 @@ class OscillatorBank extends Node {
             osc.frequency.value = 0;
             osc.start( 0 );
 
-            this.controls.frequency.connect( osc.frequency );
-            this.controls.detune.connect( osc.detune );
+            graph.frequencyControlProxy.connect( osc.frequency );
+            graph.detuneControlProxy.connect( osc.detune );
             osc.connect( graph.crossfader, 0, i );
 
             graph.oscillators.push( osc );
@@ -42,6 +41,7 @@ class OscillatorBank extends Node {
         graph.outputLevel.connect( this.outputs[ 0 ] );
 
         this.setGraph( graph );
+        this.addControls( OscillatorBank.controlsMap );
     }
 
     start( delay = 0 ) {
@@ -52,6 +52,33 @@ class OscillatorBank extends Node {
         this.getGraph().outputLevel.gain.value = 0;
     }
 }
+
+OscillatorBank.controlsMap = {
+    frequency: {
+        targets: 'graph.frequencyControlProxy',
+        min: 0,
+        max: function( io, context ) {
+            return context.sampleRate * 0.5;
+        },
+        exponent: 2,
+        value: 440
+    },
+
+    detune: {
+        targets: 'graph.detuneControlProxy',
+        min: -100,
+        max: 100,
+        value: 0
+    },
+
+    waveform: {
+        delegate: 'graph.crossfader.controls.index',
+        min: 0,
+        max: OSCILLATOR_TYPES.length - 1,
+        value: 0
+    },
+};
+
 
 AudioIO.prototype.createOscillatorBank = function() {
     return new OscillatorBank( this );
